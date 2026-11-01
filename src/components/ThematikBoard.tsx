@@ -44,6 +44,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
   );
 
   const isThemeIncorrect = themeValidation === 'incorrect';
+  const isThemeEvaluated = themeValidation === 'incorrect' || themeValidation === 'incomplete';
 
   return (
     <div className="flex flex-col items-start select-none">
@@ -89,13 +90,21 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
             : userChar.trim();
           const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
 
+          // Only highlight in red if this specific tile has a wrong typed letter during validation
+          const isTileWrong =
+            isPartOfWord &&
+            isThemeEvaluated &&
+            !isRevealedByGuess &&
+            Boolean(userChar.trim()) &&
+            userChar.trim().toUpperCase() !== targetChar.toUpperCase();
+
           return (
             <div
               key={colIdx}
               onClick={() => onSelectThemeCell(colIdx)}
               className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
-                isThemeIncorrect
-                  ? 'bg-rose-500 text-white shadow-md'
+                isTileWrong
+                  ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
                   : isRevealedByGuess
                   ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
                   : isFilled
@@ -122,6 +131,8 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
           const wordLen = word.length;
           const userFilled = filledWords[rowIdx] || '';
           const isRowIncorrect = validationStatus[rowIdx] === 'incorrect';
+          const isRowEvaluated =
+            validationStatus[rowIdx] === 'incorrect' || validationStatus[rowIdx] === 'incomplete';
 
           return (
             <div
@@ -159,13 +170,21 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                   : userChar.trim();
                 const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
 
+                // Only highlight in red if this specific tile has a wrong typed letter during validation
+                const isTileWrong =
+                  isPartOfWord &&
+                  isRowEvaluated &&
+                  !isRevealedByGuess &&
+                  Boolean(userChar.trim()) &&
+                  userChar.trim().toUpperCase() !== targetChar.toUpperCase();
+
                 return (
                   <div
                     key={colIdx}
                     onClick={() => onSelectCell(rowIdx, colIdx)}
                     className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
-                      isRowIncorrect
-                        ? 'bg-rose-500 text-white shadow-md'
+                      isTileWrong
+                        ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
                         : isRevealedByGuess
                         ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
                         : isFilled
