@@ -58,6 +58,13 @@ export default function App() {
   const [themeValidation, setThemeValidation] = useState<WordValidationStatus>('neutral');
 
   const [isMuted, setIsMuted] = useState<boolean>(() => sound.getMuted());
+  const [isHardMode, setIsHardMode] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('thematik_hard_mode') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // London UK 00:00 midnight ticker
   const [countdownText, setCountdownText] = useState<string>(() =>
@@ -887,6 +894,19 @@ export default function App() {
     setIsMuted(next);
   };
 
+  const handleToggleHardMode = () => {
+    sound.playKeyClick();
+    setIsHardMode((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('thematik_hard_mode', String(next));
+      } catch {
+        // Ignore storage error
+      }
+      return next;
+    });
+  };
+
   const isGuessMode = mode === 'GUESS';
 
   return (
@@ -900,6 +920,8 @@ export default function App() {
         currentDateStr={puzzle.formattedDate}
         countdownText={countdownText}
         containerWidth={contentWidth}
+        isHardMode={isHardMode}
+        onToggleHardMode={handleToggleHardMode}
         onOpenArchive={() => setShowArchive(true)}
         onOpenHowToPlay={() => setShowHowToPlay(true)}
         onResetOrClose={handleReset}
@@ -921,6 +943,7 @@ export default function App() {
             filledWords={filledWords}
             guessedLetters={guessedLetters}
             mode={mode}
+            isHardMode={isHardMode}
             activeRowIndex={activeRowIndex}
             activeLetterIndex={activeLetterIndex}
             validationStatus={wordValidation}
@@ -984,8 +1007,10 @@ export default function App() {
       <SettingsModal
         isOpen={showSettings}
         isMuted={isMuted}
+        isHardMode={isHardMode}
         onClose={() => setShowSettings(false)}
         onToggleMute={handleToggleMute}
+        onToggleHardMode={handleToggleHardMode}
         onOpenStats={() => setShowStats(true)}
         onOpenHowToPlay={() => setShowHowToPlay(true)}
         onOpenArchive={() => setShowArchive(true)}

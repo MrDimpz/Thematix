@@ -1,11 +1,13 @@
 import React from 'react';
-import { X, Volume2, VolumeX, BarChart2, HelpCircle, RotateCcw, Calendar, Eye } from 'lucide-react';
+import { X, Volume2, VolumeX, BarChart2, HelpCircle, RotateCcw, Calendar, Eye, Flame } from 'lucide-react';
 
 interface SettingsModalProps {
   isOpen: boolean;
   isMuted: boolean;
+  isHardMode: boolean;
   onClose: () => void;
   onToggleMute: () => void;
+  onToggleHardMode: () => void;
   onOpenStats: () => void;
   onOpenHowToPlay: () => void;
   onOpenArchive: () => void;
@@ -17,8 +19,10 @@ interface SettingsModalProps {
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
   isMuted,
+  isHardMode,
   onClose,
   onToggleMute,
+  onToggleHardMode,
   onOpenStats,
   onOpenHowToPlay,
   onOpenArchive,
@@ -42,6 +46,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <h3 className="text-xl font-bold mb-4 font-serif-title">Game Settings</h3>
 
         <div className="space-y-2">
+          {/* Hard Mode Toggle */}
+          <button
+            type="button"
+            onClick={onToggleHardMode}
+            className="w-full flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+          >
+            <div className="flex items-center gap-3 text-left">
+              <Flame
+                className={`w-5 h-5 shrink-0 ${
+                  isHardMode ? 'text-amber-500 fill-amber-500' : 'text-slate-400'
+                }`}
+              />
+              <div>
+                <span className="font-semibold text-sm block">Hard Mode</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 block leading-tight">
+                  Hides red incorrect letter indicators on solve
+                </span>
+              </div>
+            </div>
+            <span
+              className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                isHardMode
+                  ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                  : 'text-slate-400'
+              }`}
+            >
+              {isHardMode ? 'ON' : 'OFF'}
+            </span>
+          </button>
+
           {/* Sound Toggle */}
           <button
             type="button"

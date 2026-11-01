@@ -10,6 +10,7 @@ interface ThematikBoardProps {
   filledWords: string[];
   guessedLetters: string[];
   mode: GameMode;
+  isHardMode: boolean;
   activeRowIndex: number; // -1 for theme row, 0..5 for words
   activeLetterIndex: number;
   validationStatus: WordValidationStatus[];
@@ -27,6 +28,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
   filledWords,
   guessedLetters,
   mode,
+  isHardMode,
   activeRowIndex,
   activeLetterIndex,
   validationStatus,
@@ -45,9 +47,16 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
 
   const isThemeIncorrect = themeValidation === 'incorrect';
   const isThemeEvaluated = themeValidation === 'incorrect' || themeValidation === 'incomplete';
+  const isAnyEvaluatedWrong =
+    isThemeEvaluated ||
+    validationStatus.some((s) => s === 'incorrect' || s === 'incomplete');
 
   return (
-    <div className="flex flex-col items-start select-none">
+    <div
+      className={`flex flex-col items-start select-none ${
+        isHardMode && isAnyEvaluatedWrong ? 'animate-shake' : ''
+      }`}
+    >
       {/* The Clue (e.g. "___ or treat!") */}
       <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-wide mb-3 text-left">
         {themeClue}
@@ -56,7 +65,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
       {/* Theme Anchor Word Row (Fillable & affected by Guess and Fill Mode) */}
       <div
         className={`flex items-center gap-1.5 sm:gap-2 mb-3 ${
-          isThemeIncorrect ? 'animate-shake' : ''
+          !isHardMode && isThemeIncorrect ? 'animate-shake' : ''
         }`}
       >
         {Array.from({ length: maxWordLength }).map((_, colIdx) => {
@@ -90,8 +99,9 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
             : userChar.trim();
           const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
 
-          // Only highlight in red if this specific tile has a wrong typed letter during validation
+          // Only highlight in red if not in Hard Mode and this specific tile has a wrong typed letter during validation
           const isTileWrong =
+            !isHardMode &&
             isPartOfWord &&
             isThemeEvaluated &&
             !isRevealedByGuess &&
@@ -138,7 +148,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
             <div
               key={rowIdx}
               className={`flex items-center gap-1.5 sm:gap-2 ${
-                isRowIncorrect ? 'animate-shake' : ''
+                !isHardMode && isRowIncorrect ? 'animate-shake' : ''
               }`}
             >
               {Array.from({ length: maxWordLength }).map((_, colIdx) => {
@@ -170,8 +180,9 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                   : userChar.trim();
                 const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
 
-                // Only highlight in red if this specific tile has a wrong typed letter during validation
+                // Only highlight in red if not in Hard Mode and this specific tile has a wrong typed letter during validation
                 const isTileWrong =
+                  !isHardMode &&
                   isPartOfWord &&
                   isRowEvaluated &&
                   !isRevealedByGuess &&
@@ -207,16 +218,36 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
         })}
       </div>
 
-      {/* Authentic Speech Bubble Pointer beneath the grid (styled with logo colors) */}
-      <div className="w-full flex justify-center mt-5">
-        <div
-          className={`relative px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transition-colors duration-200 bg-[#3d0f57] border border-[#f5b82e]/50 ${
-            isGuessMode ? 'text-[#f5b82e]' : 'text-white'
-          }`}
-        >
-          {/* Triangular pointer pointing UP */}
-          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-[#3d0f57]" />
-          <span>{isGuessMode ? 'Guess a letter' : 'Tap any tile to type'}</span>
+      {/* Bottom Row beneath the grid: Copied Logo on bottom-left + Authentic Speech Bubble Pointer */}
+      <div className="w-full flex items-center justify-between gap-4 mt-5 relative">
+        {/* Copied Logo & Title below the bottom-left of the grid */}
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          <img
+            src="/assets/aistudio/3d_logo_944e5372.png"
+            alt="The Missing Piece Logo"
+            className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-md hover:scale-105 transition-transform"
+          />
+          <div className="flex flex-col">
+            <span className="font-black text-xs sm:text-sm tracking-wider text-[#f5b82e] uppercase font-serif leading-tight drop-shadow-xs">
+              The Missing Piece
+            </span>
+            <span className="text-[9px] sm:text-[10px] text-white/70 tracking-widest uppercase font-semibold leading-none">
+              Find Your Space
+            </span>
+          </div>
+        </div>
+
+        {/* Speech Bubble Pointer */}
+        <div className="flex-1 flex justify-center">
+          <div
+            className={`relative px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transition-colors duration-200 bg-[#3d0f57] border border-[#f5b82e]/50 ${
+              isGuessMode ? 'text-[#f5b82e]' : 'text-white'
+            }`}
+          >
+            {/* Triangular pointer pointing UP */}
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-[#3d0f57]" />
+            <span>{isGuessMode ? 'Guess a letter' : 'Tap any tile to type'}</span>
+          </div>
         </div>
       </div>
     </div>

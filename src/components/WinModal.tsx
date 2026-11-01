@@ -34,7 +34,7 @@ export const WinModal: React.FC<WinModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-md w-full p-6 text-center relative overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-lg w-full p-6 text-center relative overflow-hidden">
         {/* Confetti header graphic */}
         <div className="absolute top-0 left-0 right-0 h-2.5 bg-gradient-to-r from-[#f5b82e] via-purple-600 to-[#ffd166]" />
 
@@ -59,14 +59,14 @@ export const WinModal: React.FC<WinModalProps> = ({
           {puzzle.formattedDate}
         </p>
 
-        {/* Rating stars with logo on either side with a 20px gap */}
-        <div className="flex items-center justify-center my-3 gap-[20px]">
+        {/* Rating stars with spinning 100% larger logo on either side with a 20px gap */}
+        <div className="flex items-center justify-center my-4 gap-[20px]">
           <img
             src="/assets/aistudio/3d_logo_944e5372.png"
             alt="The Missing Piece Logo"
-            className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md select-none"
+            className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 object-contain drop-shadow-md select-none animate-[spin_4s_linear_infinite]"
           />
-          <div className="flex items-center justify-center gap-1.5">
+          <div className="flex items-center justify-center gap-1.5 shrink-0">
             {[1, 2, 3].map((star) => (
               <Star
                 key={star}
@@ -81,7 +81,7 @@ export const WinModal: React.FC<WinModalProps> = ({
           <img
             src="/assets/aistudio/3d_logo_944e5372.png"
             alt="The Missing Piece Logo"
-            className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-md select-none"
+            className="w-32 h-32 sm:w-40 sm:h-40 shrink-0 object-contain drop-shadow-md select-none animate-[spin_4s_linear_infinite]"
           />
         </div>
         <div className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">

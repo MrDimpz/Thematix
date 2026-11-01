@@ -1,10 +1,12 @@
 import React from 'react';
-import { ChevronDown, X, Clock } from 'lucide-react';
+import { ChevronDown, X, Clock, Flame } from 'lucide-react';
 
 interface GoComicsNavProps {
   currentDateStr: string;
   countdownText: string;
   containerWidth?: number;
+  isHardMode: boolean;
+  onToggleHardMode: () => void;
   onOpenArchive: () => void;
   onOpenHowToPlay: () => void;
   onResetOrClose: () => void;
@@ -14,6 +16,8 @@ export const GoComicsNav: React.FC<GoComicsNavProps> = ({
   currentDateStr,
   countdownText,
   containerWidth,
+  isHardMode,
+  onToggleHardMode,
   onOpenArchive,
   onOpenHowToPlay,
   onResetOrClose,
@@ -43,7 +47,7 @@ export const GoComicsNav: React.FC<GoComicsNavProps> = ({
         </div>
 
         {/* Center / Navigation Controls */}
-        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
           {/* Help button (?) */}
           <button
             type="button"
@@ -52,6 +56,21 @@ export const GoComicsNav: React.FC<GoComicsNavProps> = ({
             title="How to Play"
           >
             ?
+          </button>
+
+          {/* Hard Mode Toggle */}
+          <button
+            type="button"
+            onClick={onToggleHardMode}
+            className={`flex items-center gap-1.5 font-bold text-xs py-1.5 px-3 rounded-full border transition-all cursor-pointer shadow-xs ${
+              isHardMode
+                ? 'bg-[#f5b82e] text-[#220536] border-amber-300 shadow-amber-500/20'
+                : 'bg-[#2a073a] hover:bg-[#380c4d] text-white/80 hover:text-[#f5b82e] border-purple-800/60'
+            }`}
+            title="Hard Mode: Hides red incorrect letter indicators upon solve"
+          >
+            <Flame className={`w-3.5 h-3.5 ${isHardMode ? 'text-[#220536] fill-[#220536]' : 'text-[#f5b82e]'}`} />
+            <span>Hard Mode: {isHardMode ? 'ON' : 'OFF'}</span>
           </button>
 
           {/* Date Selector (Saturday, October 31 ⌄) */}
