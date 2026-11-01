@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronDown, X, Clock, Flame } from 'lucide-react';
+import { ChevronDown, Clock, Flame } from 'lucide-react';
 
 interface GoComicsNavProps {
   currentDateStr: string;
@@ -9,7 +9,7 @@ interface GoComicsNavProps {
   onToggleHardMode: () => void;
   onOpenArchive: () => void;
   onOpenHowToPlay: () => void;
-  onResetOrClose: () => void;
+  onResetOrClose?: () => void;
 }
 
 export const GoComicsNav: React.FC<GoComicsNavProps> = ({
@@ -20,7 +20,6 @@ export const GoComicsNav: React.FC<GoComicsNavProps> = ({
   onToggleHardMode,
   onOpenArchive,
   onOpenHowToPlay,
-  onResetOrClose,
 }) => {
   return (
     <nav className="w-full bg-[#180424] text-white select-none border-b border-[#f5b82e]/25 text-xs sm:text-sm shadow-md">
@@ -93,17 +92,6 @@ export const GoComicsNav: React.FC<GoComicsNavProps> = ({
             <span>Next: {countdownText}</span>
             <span className="text-[10px] text-[#f5b82e] font-sans font-black">UK</span>
           </div>
-
-          {/* Close Game pill (Close Game ✕) */}
-          <button
-            type="button"
-            onClick={onResetOrClose}
-            className="flex items-center gap-1.5 text-xs font-bold text-white/90 border border-white/30 hover:border-[#f5b82e] hover:text-[#f5b82e] hover:bg-white/5 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer"
-            title="Close or Reset Game"
-          >
-            <span>Close Game</span>
-            <X className="w-3.5 h-3.5" />
-          </button>
         </div>
       </div>
     </div>

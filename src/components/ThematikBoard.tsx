@@ -82,11 +82,11 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
             isPartOfWord;
 
           if (!isPartOfWord) {
-            // Dark inactive padding tile
+            // Dark recessed inactive padding tile
             return (
               <div
                 key={colIdx}
-                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#250634]/90 border border-purple-950/40"
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#160224]/60 border border-purple-950/30 opacity-60"
               />
             );
           }
@@ -119,7 +119,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                   ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
                   : isFilled
                   ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
-                  : 'bg-[#3b0d52] border-2 border-amber-300/40 shadow-inner hover:border-amber-300/70'
+                  : 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
               } ${
                 isThemeCellFocused
                   ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
@@ -163,11 +163,11 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                   activeLetterIndex === colIdx;
 
                 if (!isPartOfWord) {
-                  // Inactive padding tile
+                  // Dark recessed inactive padding tile
                   return (
                     <div
                       key={colIdx}
-                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#250634]/90 border border-purple-950/40"
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#160224]/60 border border-purple-950/30 opacity-60"
                     />
                   );
                 }
@@ -201,8 +201,8 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                         : isFilled
                         ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
                         : isGuessMode
-                        ? 'bg-[#3b0d52] border-2 border-[#f5b82e]/35 shadow-inner hover:border-[#f5b82e]/60'
-                        : 'bg-[#330c48] border-2 border-white/25 shadow-inner hover:border-white/50'
+                        ? 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
+                        : 'bg-[#561a7a] border-2 border-amber-200/80 shadow-md shadow-black/40 hover:bg-[#662090] hover:border-white'
                     } ${
                       isFocused
                         ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
