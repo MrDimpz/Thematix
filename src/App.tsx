@@ -343,19 +343,89 @@ export default function App() {
     ]
   );
 
+  // Helper: Check if a tile at (rowIndex, colIndex) is a guessed letter (fixed)
+  const isGuessedTile = useCallback(
+    (rIdx: number, cIdx: number): boolean => {
+      if (rIdx === -1) {
+        const char = puzzle.themeWord[cIdx];
+        return Boolean(char && guessedLetters.includes(char));
+      } else {
+        const word = puzzle.words[rIdx];
+        if (!word) return false;
+        const char = word[cIdx];
+        return Boolean(char && guessedLetters.includes(char));
+      }
+    },
+    [puzzle.themeWord, puzzle.words, guessedLetters]
+  );
+
+  // Helper: Find next un-guessed tile starting from (startRow, startCol)
+  const findNextUnguessedTile = useCallback(
+    (startRow: number, startCol: number): { r: number; c: number } | null => {
+      let r = startRow;
+      let c = startCol;
+
+      while (r <= puzzle.words.length - 1) {
+        const wordLen = r === -1 ? puzzle.themeWord.length : (puzzle.words[r]?.length || 0);
+        while (c < wordLen) {
+          if (!isGuessedTile(r, c)) {
+            return { r, c };
+          }
+          c++;
+        }
+        r++;
+        c = 0;
+      }
+      return null;
+    },
+    [puzzle.themeWord.length, puzzle.words, isGuessedTile]
+  );
+
+  // Helper: Find previous un-guessed tile starting from (startRow, startCol)
+  const findPrevUnguessedTile = useCallback(
+    (startRow: number, startCol: number): { r: number; c: number } | null => {
+      let r = startRow;
+      let c = startCol;
+
+      while (r >= -1) {
+        while (c >= 0) {
+          if (!isGuessedTile(r, c)) {
+            return { r, c };
+          }
+          c--;
+        }
+        r--;
+        if (r === -1) {
+          c = puzzle.themeWord.length - 1;
+        } else if (r >= 0) {
+          c = (puzzle.words[r]?.length || 1) - 1;
+        }
+      }
+      return null;
+    },
+    [puzzle.themeWord.length, puzzle.words, isGuessedTile]
+  );
+
   // Fill Mode letter typing (free, zero penalty)
   const handleTypeLetter = useCallback(
     (letter: string) => {
       if (isSolved || isGivenUp) return;
 
-      if (activeRowIndex === -1) {
+      const target = findNextUnguessedTile(activeRowIndex, activeLetterIndex);
+      if (!target) return; // All remaining tiles are fixed guessed letters
+
+      const { r: rIdx, c: cIdx } = target;
+
+      if (rIdx === -1) {
         // Typing into the Top Theme Clue Answer Row
         const maxLen = puzzle.themeWord.length;
         const chars = filledThemeWord.split('');
         while (chars.length < maxLen) {
           chars.push(' ');
         }
-        chars[activeLetterIndex] = letter;
+        if (!isGuessedTile(-1, cIdx)) {
+          chars[cIdx] = letter;
+        }
 
         let newThemeStr = '';
         for (let i = 0; i < maxLen; i++) {
@@ -368,28 +438,31 @@ export default function App() {
           setThemeValidation('neutral');
         }
 
-        // Advance cursor within theme row
-        if (activeLetterIndex < maxLen - 1) {
-          setActiveLetterIndex(activeLetterIndex + 1);
+        // Advance cursor to next un-guessed tile
+        const nextPos = findNextUnguessedTile(-1, cIdx + 1);
+        if (nextPos) {
+          setActiveRowIndex(nextPos.r);
+          setActiveLetterIndex(nextPos.c);
         } else {
-          // If at end of theme row, move down to word row 0
-          setActiveRowIndex(0);
-          setActiveLetterIndex(0);
+          setActiveRowIndex(-1);
+          setActiveLetterIndex(cIdx);
         }
 
         persistProgress(guessedLetters, letterGuessesCount, filledWords, newThemeStr, false, false);
       } else {
         // Typing into one of the 6 Word Rows
-        const targetWord = puzzle.words[activeRowIndex];
+        const targetWord = puzzle.words[rIdx];
         const maxLen = targetWord.length;
-        const currentWordStr = filledWords[activeRowIndex] || '';
+        const currentWordStr = filledWords[rIdx] || '';
 
         const chars = currentWordStr.split('');
         while (chars.length < maxLen) {
           chars.push(' ');
         }
 
-        chars[activeLetterIndex] = letter;
+        if (!isGuessedTile(rIdx, cIdx)) {
+          chars[cIdx] = letter;
+        }
 
         let newWordStr = '';
         for (let i = 0; i < maxLen; i++) {
@@ -398,21 +471,23 @@ export default function App() {
         newWordStr = newWordStr.trimEnd();
 
         const newFilled = [...filledWords];
-        newFilled[activeRowIndex] = newWordStr;
+        newFilled[rIdx] = newWordStr;
         setFilledWords(newFilled);
 
-        if (wordValidation[activeRowIndex] !== 'neutral') {
+        if (wordValidation[rIdx] !== 'neutral') {
           const nextValidation = [...wordValidation];
-          nextValidation[activeRowIndex] = 'neutral';
+          nextValidation[rIdx] = 'neutral';
           setWordValidation(nextValidation);
         }
 
-        // Advance cursor
-        if (activeLetterIndex < maxLen - 1) {
-          setActiveLetterIndex(activeLetterIndex + 1);
-        } else if (activeRowIndex < puzzle.words.length - 1) {
-          setActiveRowIndex(activeRowIndex + 1);
-          setActiveLetterIndex(0);
+        // Advance cursor to next un-guessed tile
+        const nextPos = findNextUnguessedTile(rIdx, cIdx + 1);
+        if (nextPos) {
+          setActiveRowIndex(nextPos.r);
+          setActiveLetterIndex(nextPos.c);
+        } else {
+          setActiveRowIndex(rIdx);
+          setActiveLetterIndex(cIdx);
         }
 
         persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
@@ -422,11 +497,13 @@ export default function App() {
       isSolved,
       isGivenUp,
       activeRowIndex,
+      activeLetterIndex,
+      findNextUnguessedTile,
+      isGuessedTile,
       puzzle.themeWord,
       puzzle.words,
       filledThemeWord,
       filledWords,
-      activeLetterIndex,
       themeValidation,
       wordValidation,
       persistProgress,
@@ -442,59 +519,110 @@ export default function App() {
     if (activeRowIndex === -1) {
       // Backspace on Theme Clue Answer Row
       const chars = filledThemeWord.split('');
-      if (activeLetterIndex < chars.length && chars[activeLetterIndex] && chars[activeLetterIndex] !== ' ') {
+
+      if (
+        activeLetterIndex < chars.length &&
+        chars[activeLetterIndex] &&
+        chars[activeLetterIndex] !== ' ' &&
+        !isGuessedTile(-1, activeLetterIndex)
+      ) {
         chars[activeLetterIndex] = ' ';
-      } else if (activeLetterIndex > 0) {
-        const prevIdx = activeLetterIndex - 1;
-        chars[prevIdx] = ' ';
-        setActiveLetterIndex(prevIdx);
+        const newTheme = chars.join('').trimEnd();
+        setFilledThemeWord(newTheme);
+        if (themeValidation !== 'neutral') setThemeValidation('neutral');
+        persistProgress(guessedLetters, letterGuessesCount, filledWords, newTheme, false, false);
+        return;
       }
 
-      const newTheme = chars.join('').trimEnd();
-      setFilledThemeWord(newTheme);
+      // Step backward to find nearest un-guessed tile to erase
+      const prevPos = findPrevUnguessedTile(-1, activeLetterIndex - 1);
+      if (prevPos) {
+        setActiveRowIndex(prevPos.r);
+        setActiveLetterIndex(prevPos.c);
 
-      if (themeValidation !== 'neutral') {
-        setThemeValidation('neutral');
+        if (prevPos.r === -1) {
+          if (!isGuessedTile(-1, prevPos.c) && chars[prevPos.c]) {
+            chars[prevPos.c] = ' ';
+          }
+          const newTheme = chars.join('').trimEnd();
+          setFilledThemeWord(newTheme);
+          if (themeValidation !== 'neutral') setThemeValidation('neutral');
+          persistProgress(guessedLetters, letterGuessesCount, filledWords, newTheme, false, false);
+        } else {
+          const rowChars = (filledWords[prevPos.r] || '').split('');
+          if (!isGuessedTile(prevPos.r, prevPos.c) && rowChars[prevPos.c]) {
+            rowChars[prevPos.c] = ' ';
+          }
+          const newFilled = [...filledWords];
+          newFilled[prevPos.r] = rowChars.join('').trimEnd();
+          setFilledWords(newFilled);
+          persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
+        }
       }
-
-      persistProgress(guessedLetters, letterGuessesCount, filledWords, newTheme, false, false);
     } else {
       // Backspace on Word Rows
       const currentWordStr = filledWords[activeRowIndex] || '';
       const chars = currentWordStr.split('');
 
-      if (activeLetterIndex < chars.length && chars[activeLetterIndex] && chars[activeLetterIndex] !== ' ') {
+      if (
+        activeLetterIndex < chars.length &&
+        chars[activeLetterIndex] &&
+        chars[activeLetterIndex] !== ' ' &&
+        !isGuessedTile(activeRowIndex, activeLetterIndex)
+      ) {
         chars[activeLetterIndex] = ' ';
-      } else if (activeLetterIndex > 0) {
-        const prevIdx = activeLetterIndex - 1;
-        chars[prevIdx] = ' ';
-        setActiveLetterIndex(prevIdx);
-      } else if (activeRowIndex === 0) {
-        // Move back to end of theme row if at beginning of row 0
-        setActiveRowIndex(-1);
-        setActiveLetterIndex(puzzle.themeWord.length - 1);
+        const newFilled = [...filledWords];
+        newFilled[activeRowIndex] = chars.join('').trimEnd();
+        setFilledWords(newFilled);
+        if (wordValidation[activeRowIndex] !== 'neutral') {
+          const nextValidation = [...wordValidation];
+          nextValidation[activeRowIndex] = 'neutral';
+          setWordValidation(nextValidation);
+        }
+        persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
+        return;
       }
 
-      const newFilled = [...filledWords];
-      newFilled[activeRowIndex] = chars.join('').trimEnd();
-      setFilledWords(newFilled);
+      // Step backward
+      const prevPos = findPrevUnguessedTile(activeRowIndex, activeLetterIndex - 1);
+      if (prevPos) {
+        setActiveRowIndex(prevPos.r);
+        setActiveLetterIndex(prevPos.c);
 
-      if (wordValidation[activeRowIndex] !== 'neutral') {
-        const nextValidation = [...wordValidation];
-        nextValidation[activeRowIndex] = 'neutral';
-        setWordValidation(nextValidation);
+        if (prevPos.r === -1) {
+          const themeChars = filledThemeWord.split('');
+          if (!isGuessedTile(-1, prevPos.c) && themeChars[prevPos.c]) {
+            themeChars[prevPos.c] = ' ';
+          }
+          const newTheme = themeChars.join('').trimEnd();
+          setFilledThemeWord(newTheme);
+          persistProgress(guessedLetters, letterGuessesCount, filledWords, newTheme, false, false);
+        } else {
+          const rowChars = (filledWords[prevPos.r] || '').split('');
+          if (!isGuessedTile(prevPos.r, prevPos.c) && rowChars[prevPos.c]) {
+            rowChars[prevPos.c] = ' ';
+          }
+          const newFilled = [...filledWords];
+          newFilled[prevPos.r] = rowChars.join('').trimEnd();
+          setFilledWords(newFilled);
+          if (wordValidation[prevPos.r] !== 'neutral') {
+            const nextValidation = [...wordValidation];
+            nextValidation[prevPos.r] = 'neutral';
+            setWordValidation(nextValidation);
+          }
+          persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
+        }
       }
-
-      persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
     }
   }, [
     isSolved,
     isGivenUp,
     activeRowIndex,
+    activeLetterIndex,
     filledThemeWord,
     filledWords,
-    activeLetterIndex,
-    puzzle.themeWord.length,
+    isGuessedTile,
+    findPrevUnguessedTile,
     themeValidation,
     wordValidation,
     persistProgress,
