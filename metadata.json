@@ -1,0 +1,8 @@
+{
+  "name": "Thematik - Daily Word Association Puzzle",
+  "description": "Authentic Thematix daily word and trivia puzzle game from The Missing Piece featuring Guess Mode, Fill Mode, alphabetical word clues, archive, and streaks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,876 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import confetti from 'canvas-confetti';
+import { GameMode, Puzzle, WordValidationStatus } from './types/game';
+import { DAILY_PUZZLES, getTodayPuzzle, getRandomPuzzle } from './data/puzzles';
+import {
+  loadPuzzleProgress,
+  savePuzzleProgress,
+  recordWin,
+  recordLoss,
+} from './utils/storage';
+import { sound } from './utils/sound';
+import {
+  getMsUntilNextLondonMidnight,
+  formatTimeRemaining,
+  getLondonDateString,
+} from './utils/londonTime';
+
+import { GoComicsNav } from './components/GoComicsNav';
+import { ThematikBoard } from './components/ThematikBoard';
+import { GameSidebar } from './components/GameSidebar';
+import { HowToPlayModal } from './components/HowToPlayModal';
+import { WinModal } from './components/WinModal';
+import { ArchiveModal } from './components/ArchiveModal';
+import { StatsModal } from './components/StatsModal';
+import { SettingsModal } from './components/SettingsModal';
+import { CustomPuzzleModal } from './components/CustomPuzzleModal';
+
+export default function App() {
+  const [puzzle, setPuzzle] = useState<Puzzle>(() => getTodayPuzzle());
+  const [mode, setMode] = useState<GameMode>('GUESS');
+  const [view, setView] = useState<'CHOICE' | 'KEYBOARD'>('CHOICE');
+
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+  const [letterGuessesCount, setLetterGuessesCount] = useState<number>(0);
+  const [filledWords, setFilledWords] = useState<string[]>(['', '', '', '', '', '']);
+  const [filledThemeWord, setFilledThemeWord] = useState<string>('');
+
+  // activeRowIndex: -1 for the top theme clue answer row, 0..5 for the 6 word rows
+  const [activeRowIndex, setActiveRowIndex] = useState<number>(0);
+  const [activeLetterIndex, setActiveLetterIndex] = useState<number>(0);
+
+  const [isSolved, setIsSolved] = useState<boolean>(false);
+  const [isGivenUp, setIsGivenUp] = useState<boolean>(false);
+
+  const [wordValidation, setWordValidation] = useState<WordValidationStatus[]>([
+    'neutral',
+    'neutral',
+    'neutral',
+    'neutral',
+    'neutral',
+    'neutral',
+  ]);
+  const [themeValidation, setThemeValidation] = useState<WordValidationStatus>('neutral');
+
+  const [isMuted, setIsMuted] = useState<boolean>(() => sound.getMuted());
+
+  // London UK 00:00 midnight ticker
+  const [countdownText, setCountdownText] = useState<string>(() =>
+    formatTimeRemaining(getMsUntilNextLondonMidnight())
+  );
+
+  useEffect(() => {
+    let prevLondonDay = getLondonDateString();
+
+    const interval = setInterval(() => {
+      const msLeft = getMsUntilNextLondonMidnight();
+      setCountdownText(formatTimeRemaining(msLeft));
+
+      const currentLondonDay = getLondonDateString();
+      if (currentLondonDay !== prevLondonDay) {
+        prevLondonDay = currentLondonDay;
+        // 00:00 London UK Time: New Daily Puzzle is Released!
+        const newDaily = getTodayPuzzle();
+        setPuzzle(newDaily);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Measure game container width to horizontally align the top bar logo with the main board
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const [contentWidth, setContentWidth] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width > 0) {
+        setContentWidth(Math.round(rect.width));
+      }
+    };
+
+    measure();
+
+    const observer = new ResizeObserver(() => {
+      measure();
+    });
+
+    observer.observe(el);
+    window.addEventListener('resize', measure);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+    };
+  }, [puzzle.id]);
+
+  // Modals state
+  const [showHowToPlay, setShowHowToPlay] = useState<boolean>(false);
+  const [showWinModal, setShowWinModal] = useState<boolean>(false);
+  const [showArchive, setShowArchive] = useState<boolean>(false);
+  const [showStats, setShowStats] = useState<boolean>(false);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showCustom, setShowCustom] = useState<boolean>(false);
+
+  // Set of all unique letters in this puzzle
+  const puzzleLetters = useMemo(() => {
+    const letters = new Set<string>();
+    puzzle.words.forEach((w) => {
+      for (const char of w) {
+        if (/^[A-Z]$/.test(char)) letters.add(char);
+      }
+    });
+    for (const char of puzzle.themeWord) {
+      if (/^[A-Z]$/.test(char)) letters.add(char);
+    }
+    return letters;
+  }, [puzzle]);
+
+  // Load saved progress when puzzle changes
+  useEffect(() => {
+    const saved = loadPuzzleProgress(puzzle.id);
+    const isMismatched =
+      saved &&
+      ((saved.themeWord && saved.themeWord !== puzzle.themeWord) ||
+        (saved.filledThemeWord && saved.filledThemeWord.length > puzzle.themeWord.length) ||
+        (saved.filledWords &&
+          saved.filledWords.some(
+            (w, idx) => w.length > (puzzle.words[idx]?.length || 0)
+          )));
+
+    if (saved && !isMismatched) {
+      setGuessedLetters(saved.guessedLetters || []);
+      setLetterGuessesCount(saved.letterGuessesCount || 0);
+      setFilledWords(saved.filledWords || ['', '', '', '', '', '']);
+      setFilledThemeWord(saved.filledThemeWord || '');
+      setIsSolved(saved.isSolved || false);
+      setIsGivenUp(saved.isGivenUp || false);
+
+      if (saved.isSolved) {
+        setWordValidation(['correct', 'correct', 'correct', 'correct', 'correct', 'correct']);
+        setThemeValidation('correct');
+        setView('KEYBOARD');
+      } else if (
+        (saved.guessedLetters && saved.guessedLetters.length > 0) ||
+        (saved.filledWords && saved.filledWords.some((w) => w.length > 0)) ||
+        (saved.filledThemeWord && saved.filledThemeWord.length > 0)
+      ) {
+        setView('KEYBOARD');
+        setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
+        setThemeValidation('neutral');
+      } else {
+        setView('CHOICE');
+        setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
+        setThemeValidation('neutral');
+      }
+    } else {
+      setGuessedLetters([]);
+      setLetterGuessesCount(0);
+      setFilledWords(['', '', '', '', '', '']);
+      setFilledThemeWord('');
+      setIsSolved(false);
+      setIsGivenUp(false);
+      setView('CHOICE');
+      setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
+      setThemeValidation('neutral');
+    }
+    setActiveRowIndex(0);
+    setActiveLetterIndex(0);
+  }, [puzzle.id]);
+
+  const persistProgress = useCallback(
+    (
+      newGuessed: string[],
+      newGuessesCount: number,
+      newFilled: string[],
+      newTheme: string,
+      solved: boolean,
+      givenUp: boolean
+    ) => {
+      savePuzzleProgress(puzzle.id, {
+        guessedLetters: newGuessed,
+        letterGuessesCount: newGuessesCount,
+        filledWords: newFilled,
+        filledThemeWord: newTheme,
+        themeWord: puzzle.themeWord,
+        isSolved: solved,
+        isGivenUp: givenUp,
+      });
+    },
+    [puzzle.id, puzzle.themeWord]
+  );
+
+  const triggerConfetti = () => {
+    try {
+      confetti({
+        particleCount: 90,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#2ec4b6', '#c2b1cb', '#ffb703', '#ffffff', '#8338ec'],
+      });
+    } catch {
+      // Fallback
+    }
+  };
+
+  // Check if puzzle is completely resolved (Theme Word + 6 Alphabetical Words)
+  const checkWinCondition = useCallback(
+    (currentGuessed: string[], currentFilled: string[], currentTheme: string) => {
+      // 1. Check Theme Word
+      for (let j = 0; j < puzzle.themeWord.length; j++) {
+        const char = puzzle.themeWord[j];
+        const typedChar = currentTheme[j];
+        if (typedChar && typedChar !== ' ') {
+          if (typedChar !== char) return false;
+        } else if (currentGuessed.includes(char)) {
+          // revealed
+        } else {
+          return false;
+        }
+      }
+
+      // 2. Check 6 Words
+      for (let i = 0; i < puzzle.words.length; i++) {
+        const target = puzzle.words[i];
+        const userTyped = currentFilled[i] || '';
+
+        for (let j = 0; j < target.length; j++) {
+          const char = target[j];
+          const typedChar = userTyped[j];
+          if (typedChar && typedChar !== ' ') {
+            if (typedChar !== char) return false;
+          } else if (currentGuessed.includes(char)) {
+            // revealed
+          } else {
+            return false;
+          }
+        }
+      }
+      return true;
+    },
+    [puzzle.themeWord, puzzle.words]
+  );
+
+  // Guess Mode letter handler (reveals occurrences in theme word and the 6 words)
+  const handleGuessLetter = useCallback(
+    (letter: string) => {
+      if (isSolved || isGivenUp || guessedLetters.includes(letter)) return;
+
+      const newGuessed = [...guessedLetters, letter];
+      const newGuessesCount = letterGuessesCount + 1;
+      setGuessedLetters(newGuessed);
+      setLetterGuessesCount(newGuessesCount);
+
+      const letterIsPresent = puzzleLetters.has(letter);
+      if (letterIsPresent) {
+        sound.playLetterFound();
+      } else {
+        sound.playLetterMissed();
+      }
+
+      // When a letter is guessed, fill it in the correct place overwriting the existing letter if necessary
+      let nextThemeWord = filledThemeWord;
+      let nextFilledWords = filledWords;
+
+      if (letterIsPresent) {
+        // 1. Overwrite in theme word where letter matches
+        const themeChars = filledThemeWord.split('');
+        while (themeChars.length < puzzle.themeWord.length) {
+          themeChars.push(' ');
+        }
+        for (let j = 0; j < puzzle.themeWord.length; j++) {
+          if (puzzle.themeWord[j] === letter) {
+            themeChars[j] = letter;
+          }
+        }
+        nextThemeWord = themeChars.join('').trimEnd();
+        setFilledThemeWord(nextThemeWord);
+
+        // 2. Overwrite in all 6 word rows where letter matches
+        nextFilledWords = filledWords.map((rowStr, rIdx) => {
+          const targetWord = puzzle.words[rIdx];
+          if (!targetWord || !targetWord.includes(letter)) return rowStr;
+          const chars = rowStr.split('');
+          while (chars.length < targetWord.length) {
+            chars.push(' ');
+          }
+          for (let cIdx = 0; cIdx < targetWord.length; cIdx++) {
+            if (targetWord[cIdx] === letter) {
+              chars[cIdx] = letter;
+            }
+          }
+          return chars.join('').trimEnd();
+        });
+        setFilledWords(nextFilledWords);
+      }
+
+      const hasWon = checkWinCondition(newGuessed, nextFilledWords, nextThemeWord);
+      if (hasWon) {
+        setIsSolved(true);
+        setWordValidation(['correct', 'correct', 'correct', 'correct', 'correct', 'correct']);
+        setThemeValidation('correct');
+        sound.playWin();
+        triggerConfetti();
+        recordWin(newGuessesCount, puzzle.date);
+        persistProgress(newGuessed, newGuessesCount, nextFilledWords, nextThemeWord, true, false);
+        setTimeout(() => setShowWinModal(true), 600);
+      } else {
+        persistProgress(newGuessed, newGuessesCount, nextFilledWords, nextThemeWord, false, false);
+      }
+    },
+    [
+      isSolved,
+      isGivenUp,
+      guessedLetters,
+      letterGuessesCount,
+      puzzleLetters,
+      puzzle.themeWord,
+      puzzle.words,
+      checkWinCondition,
+      filledWords,
+      filledThemeWord,
+      puzzle.date,
+      persistProgress,
+    ]
+  );
+
+  // Fill Mode letter typing (free, zero penalty)
+  const handleTypeLetter = useCallback(
+    (letter: string) => {
+      if (isSolved || isGivenUp) return;
+
+      if (activeRowIndex === -1) {
+        // Typing into the Top Theme Clue Answer Row
+        const maxLen = puzzle.themeWord.length;
+        const chars = filledThemeWord.split('');
+        while (chars.length < maxLen) {
+          chars.push(' ');
+        }
+        chars[activeLetterIndex] = letter;
+
+        let newThemeStr = '';
+        for (let i = 0; i < maxLen; i++) {
+          newThemeStr += chars[i] || ' ';
+        }
+        newThemeStr = newThemeStr.trimEnd();
+        setFilledThemeWord(newThemeStr);
+
+        if (themeValidation !== 'neutral') {
+          setThemeValidation('neutral');
+        }
+
+        // Advance cursor within theme row
+        if (activeLetterIndex < maxLen - 1) {
+          setActiveLetterIndex(activeLetterIndex + 1);
+        } else {
+          // If at end of theme row, move down to word row 0
+          setActiveRowIndex(0);
+          setActiveLetterIndex(0);
+        }
+
+        persistProgress(guessedLetters, letterGuessesCount, filledWords, newThemeStr, false, false);
+      } else {
+        // Typing into one of the 6 Word Rows
+        const targetWord = puzzle.words[activeRowIndex];
+        const maxLen = targetWord.length;
+        const currentWordStr = filledWords[activeRowIndex] || '';
+
+        const chars = currentWordStr.split('');
+        while (chars.length < maxLen) {
+          chars.push(' ');
+        }
+
+        chars[activeLetterIndex] = letter;
+
+        let newWordStr = '';
+        for (let i = 0; i < maxLen; i++) {
+          newWordStr += chars[i] || ' ';
+        }
+        newWordStr = newWordStr.trimEnd();
+
+        const newFilled = [...filledWords];
+        newFilled[activeRowIndex] = newWordStr;
+        setFilledWords(newFilled);
+
+        if (wordValidation[activeRowIndex] !== 'neutral') {
+          const nextValidation = [...wordValidation];
+          nextValidation[activeRowIndex] = 'neutral';
+          setWordValidation(nextValidation);
+        }
+
+        // Advance cursor
+        if (activeLetterIndex < maxLen - 1) {
+          setActiveLetterIndex(activeLetterIndex + 1);
+        } else if (activeRowIndex < puzzle.words.length - 1) {
+          setActiveRowIndex(activeRowIndex + 1);
+          setActiveLetterIndex(0);
+        }
+
+        persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
+      }
+    },
+    [
+      isSolved,
+      isGivenUp,
+      activeRowIndex,
+      puzzle.themeWord,
+      puzzle.words,
+      filledThemeWord,
+      filledWords,
+      activeLetterIndex,
+      themeValidation,
+      wordValidation,
+      persistProgress,
+      guessedLetters,
+      letterGuessesCount,
+    ]
+  );
+
+  // Backspace handler
+  const handleBackspace = useCallback(() => {
+    if (isSolved || isGivenUp) return;
+
+    if (activeRowIndex === -1) {
+      // Backspace on Theme Clue Answer Row
+      const chars = filledThemeWord.split('');
+      if (activeLetterIndex < chars.length && chars[activeLetterIndex] && chars[activeLetterIndex] !== ' ') {
+        chars[activeLetterIndex] = ' ';
+      } else if (activeLetterIndex > 0) {
+        const prevIdx = activeLetterIndex - 1;
+        chars[prevIdx] = ' ';
+        setActiveLetterIndex(prevIdx);
+      }
+
+      const newTheme = chars.join('').trimEnd();
+      setFilledThemeWord(newTheme);
+
+      if (themeValidation !== 'neutral') {
+        setThemeValidation('neutral');
+      }
+
+      persistProgress(guessedLetters, letterGuessesCount, filledWords, newTheme, false, false);
+    } else {
+      // Backspace on Word Rows
+      const currentWordStr = filledWords[activeRowIndex] || '';
+      const chars = currentWordStr.split('');
+
+      if (activeLetterIndex < chars.length && chars[activeLetterIndex] && chars[activeLetterIndex] !== ' ') {
+        chars[activeLetterIndex] = ' ';
+      } else if (activeLetterIndex > 0) {
+        const prevIdx = activeLetterIndex - 1;
+        chars[prevIdx] = ' ';
+        setActiveLetterIndex(prevIdx);
+      } else if (activeRowIndex === 0) {
+        // Move back to end of theme row if at beginning of row 0
+        setActiveRowIndex(-1);
+        setActiveLetterIndex(puzzle.themeWord.length - 1);
+      }
+
+      const newFilled = [...filledWords];
+      newFilled[activeRowIndex] = chars.join('').trimEnd();
+      setFilledWords(newFilled);
+
+      if (wordValidation[activeRowIndex] !== 'neutral') {
+        const nextValidation = [...wordValidation];
+        nextValidation[activeRowIndex] = 'neutral';
+        setWordValidation(nextValidation);
+      }
+
+      persistProgress(guessedLetters, letterGuessesCount, newFilled, filledThemeWord, false, false);
+    }
+  }, [
+    isSolved,
+    isGivenUp,
+    activeRowIndex,
+    filledThemeWord,
+    filledWords,
+    activeLetterIndex,
+    puzzle.themeWord.length,
+    themeValidation,
+    wordValidation,
+    persistProgress,
+    guessedLetters,
+    letterGuessesCount,
+  ]);
+
+  // Physical Keyboard Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isSolved) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      const key = e.key.toUpperCase();
+
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        sound.playKeyClick();
+        handleBackspace();
+        return;
+      }
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (activeRowIndex === 0) {
+          setActiveRowIndex(-1);
+          setActiveLetterIndex(0);
+        } else if (activeRowIndex > 0) {
+          setActiveRowIndex(activeRowIndex - 1);
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (activeRowIndex === -1) {
+          setActiveRowIndex(0);
+          setActiveLetterIndex(0);
+        } else if (activeRowIndex < puzzle.words.length - 1) {
+          setActiveRowIndex(activeRowIndex + 1);
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setActiveLetterIndex((prev) => Math.max(0, prev - 1));
+        return;
+      }
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const maxLen =
+          activeRowIndex === -1
+            ? puzzle.themeWord.length
+            : puzzle.words[activeRowIndex].length;
+        setActiveLetterIndex((prev) => Math.min(maxLen - 1, prev + 1));
+        return;
+      }
+
+      if (/^[A-Z]$/.test(key)) {
+        e.preventDefault();
+        if (mode === 'GUESS') {
+          if (view === 'CHOICE') setView('KEYBOARD');
+          handleGuessLetter(key);
+        } else {
+          sound.playKeyClick();
+          if (view === 'CHOICE') setView('KEYBOARD');
+          handleTypeLetter(key);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    isSolved,
+    mode,
+    view,
+    handleGuessLetter,
+    handleTypeLetter,
+    handleBackspace,
+    activeRowIndex,
+    puzzle.themeWord.length,
+    puzzle.words,
+  ]);
+
+  const solveRevertTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  // Solve button check (validates both the top theme answer and the 6 words)
+  const handleSolve = () => {
+    if (isSolved) return;
+
+    let allCorrect = true;
+
+    // 1. Validate Top Theme Clue Answer
+    let themeComposite = '';
+    let themeComplete = true;
+    for (let j = 0; j < puzzle.themeWord.length; j++) {
+      const char = puzzle.themeWord[j];
+      const typed = filledThemeWord[j];
+      if (typed && typed !== ' ') {
+        themeComposite += typed;
+      } else if (guessedLetters.includes(char)) {
+        themeComposite += char;
+      } else {
+        themeComplete = false;
+        themeComposite += ' ';
+      }
+    }
+
+    if (themeComposite === puzzle.themeWord) {
+      setThemeValidation('correct');
+    } else if (!themeComplete) {
+      setThemeValidation('incomplete');
+      allCorrect = false;
+    } else {
+      setThemeValidation('incorrect');
+      allCorrect = false;
+    }
+
+    // 2. Validate the 6 Words
+    const newValidation: WordValidationStatus[] = [];
+    for (let i = 0; i < puzzle.words.length; i++) {
+      const target = puzzle.words[i];
+      const userTyped = filledWords[i] || '';
+
+      let composite = '';
+      let isComplete = true;
+
+      for (let j = 0; j < target.length; j++) {
+        const char = target[j];
+        const typedChar = userTyped[j];
+
+        if (typedChar && typedChar !== ' ') {
+          composite += typedChar;
+        } else if (guessedLetters.includes(char)) {
+          composite += char;
+        } else {
+          isComplete = false;
+          composite += ' ';
+        }
+      }
+
+      if (composite === target) {
+        newValidation.push('correct');
+      } else if (!isComplete) {
+        newValidation.push('incomplete');
+        allCorrect = false;
+      } else {
+        newValidation.push('incorrect');
+        allCorrect = false;
+      }
+    }
+
+    setWordValidation(newValidation);
+
+    if (allCorrect) {
+      if (solveRevertTimerRef.current) clearTimeout(solveRevertTimerRef.current);
+      setIsSolved(true);
+      sound.playWin();
+      triggerConfetti();
+      recordWin(letterGuessesCount, puzzle.date);
+      persistProgress(guessedLetters, letterGuessesCount, filledWords, filledThemeWord, true, false);
+      setTimeout(() => setShowWinModal(true), 500);
+    } else {
+      sound.playError();
+
+      // Revert red/incorrect status after 10 seconds
+      if (solveRevertTimerRef.current) {
+        clearTimeout(solveRevertTimerRef.current);
+      }
+      solveRevertTimerRef.current = setTimeout(() => {
+        setThemeValidation('neutral');
+        setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
+      }, 10000);
+    }
+  };
+
+  // Give Up / Reveal answers
+  const handleGiveUp = () => {
+    if (isSolved) return;
+    const confirm = window.confirm(
+      'Are you sure you want to reveal the answers for this puzzle?'
+    );
+    if (!confirm) return;
+
+    setIsGivenUp(true);
+    setIsSolved(true);
+    setThemeValidation('correct');
+    setWordValidation(['correct', 'correct', 'correct', 'correct', 'correct', 'correct']);
+    recordLoss(puzzle.date);
+    persistProgress(
+      guessedLetters,
+      letterGuessesCount,
+      [...puzzle.words],
+      puzzle.themeWord,
+      true,
+      true
+    );
+  };
+
+  // Reset current puzzle
+  const handleReset = () => {
+    const confirm = window.confirm('Reset this puzzle? All progress will be cleared.');
+    if (!confirm) return;
+
+    setGuessedLetters([]);
+    setLetterGuessesCount(0);
+    setFilledWords(['', '', '', '', '', '']);
+    setFilledThemeWord('');
+    setIsSolved(false);
+    setIsGivenUp(false);
+    setView('CHOICE');
+    setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
+    setThemeValidation('neutral');
+    setActiveRowIndex(0);
+    setActiveLetterIndex(0);
+    persistProgress([], 0, ['', '', '', '', '', ''], '', false, false);
+  };
+
+  const handleSelectGuessMode = () => {
+    sound.playModeToggle('GUESS');
+    setMode('GUESS');
+    setView('KEYBOARD');
+  };
+
+  const handleSelectFillMode = () => {
+    sound.playModeToggle('FILL');
+    setMode('FILL');
+    setView('KEYBOARD');
+  };
+
+  const handleSelectWordCell = (rowIdx: number, colIdx: number) => {
+    setActiveRowIndex(rowIdx);
+    setActiveLetterIndex(colIdx);
+    if (mode !== 'FILL') {
+      sound.playModeToggle('FILL');
+      setMode('FILL');
+    }
+    if (view !== 'KEYBOARD') {
+      setView('KEYBOARD');
+    }
+  };
+
+  const handleSelectThemeCell = (colIdx: number) => {
+    setActiveRowIndex(-1);
+    setActiveLetterIndex(colIdx);
+    if (mode !== 'FILL') {
+      sound.playModeToggle('FILL');
+      setMode('FILL');
+    }
+    if (view !== 'KEYBOARD') {
+      setView('KEYBOARD');
+    }
+  };
+
+  const handleToggleMute = () => {
+    const next = sound.toggleMute();
+    setIsMuted(next);
+  };
+
+  const isGuessMode = mode === 'GUESS';
+
+  return (
+    <div
+      className={`min-h-screen flex flex-col transition-colors duration-300 font-sans ${
+        isGuessMode ? 'bg-[#230638]' : 'bg-[#1b032e]'
+      }`}
+    >
+      {/* GoComics Top Navbar */}
+      <GoComicsNav
+        currentDateStr={puzzle.formattedDate}
+        countdownText={countdownText}
+        containerWidth={contentWidth}
+        onOpenArchive={() => setShowArchive(true)}
+        onOpenHowToPlay={() => setShowHowToPlay(true)}
+        onResetOrClose={handleReset}
+      />
+
+      {/* Main Play Area - Centered on screen */}
+      <main className="flex-1 w-full flex items-center justify-center px-4 py-4 sm:py-6 overflow-y-auto">
+        <div
+          ref={contentRef}
+          className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-6 sm:gap-10 lg:gap-12 my-auto"
+        >
+          {/* Left Side: Clue, Fillable Theme Word, Divider, 6 Alphabetical Words Grid, Speech Bubble */}
+          <ThematikBoard
+            themeClue={puzzle.themeClue}
+            themeWord={puzzle.themeWord}
+            filledThemeWord={filledThemeWord}
+            themeValidation={themeValidation}
+            words={puzzle.words}
+            filledWords={filledWords}
+            guessedLetters={guessedLetters}
+            mode={mode}
+            activeRowIndex={activeRowIndex}
+            activeLetterIndex={activeLetterIndex}
+            validationStatus={wordValidation}
+            isSolved={isSolved}
+            onSelectCell={handleSelectWordCell}
+            onSelectThemeCell={handleSelectThemeCell}
+          />
+
+          {/* Right Side: 00 GUESSES ribbon, 4x7 Alphabetical Keyboard or Choice Cards, Mode Toggle, SOLVE button */}
+          <GameSidebar
+            mode={mode}
+            guessesCount={letterGuessesCount}
+            view={view}
+            guessedLetters={guessedLetters}
+            puzzleLetters={puzzleLetters}
+            isSolved={isSolved}
+            onSelectGuessMode={handleSelectGuessMode}
+            onSelectFillMode={handleSelectFillMode}
+            onGuessLetter={handleGuessLetter}
+            onTypeLetter={handleTypeLetter}
+            onBackspace={handleBackspace}
+            onSolve={handleSolve}
+            onOpenSettings={() => setShowSettings(true)}
+          />
+        </div>
+      </main>
+
+      {/* Modals */}
+      <HowToPlayModal
+        isOpen={showHowToPlay}
+        onClose={() => setShowHowToPlay(false)}
+      />
+
+      <WinModal
+        isOpen={showWinModal}
+        puzzle={puzzle}
+        letterGuessesCount={letterGuessesCount}
+        onClose={() => setShowWinModal(false)}
+        onSelectNext={() => {
+          const idx = DAILY_PUZZLES.findIndex((p) => p.id === puzzle.id);
+          if (idx < DAILY_PUZZLES.length - 1) {
+            setPuzzle(DAILY_PUZZLES[idx + 1]);
+          }
+        }}
+        onSelectRandom={() => setPuzzle(getRandomPuzzle())}
+        onOpenArchive={() => setShowArchive(true)}
+      />
+
+      <ArchiveModal
+        isOpen={showArchive}
+        currentPuzzleId={puzzle.id}
+        onClose={() => setShowArchive(false)}
+        onSelectPuzzle={(p) => setPuzzle(p)}
+      />
+
+      <StatsModal
+        isOpen={showStats}
+        onClose={() => setShowStats(false)}
+      />
+
+      <SettingsModal
+        isOpen={showSettings}
+        isMuted={isMuted}
+        onClose={() => setShowSettings(false)}
+        onToggleMute={handleToggleMute}
+        onOpenStats={() => setShowStats(true)}
+        onOpenHowToPlay={() => setShowHowToPlay(true)}
+        onOpenArchive={() => setShowArchive(true)}
+        onReset={handleReset}
+        onGiveUp={handleGiveUp}
+        isSolved={isSolved}
+      />
+
+      <CustomPuzzleModal
+        isOpen={showCustom}
+        onClose={() => setShowCustom(false)}
+        onPlayCustomPuzzle={(p) => setPuzzle(p)}
+      />
+    </div>
+  );
+}

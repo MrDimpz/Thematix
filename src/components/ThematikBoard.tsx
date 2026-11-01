@@ -1,0 +1,205 @@
+import React from 'react';
+import { GameMode, WordValidationStatus } from '../types/game';
+
+interface ThematikBoardProps {
+  themeClue: string;
+  themeWord: string;
+  filledThemeWord: string;
+  themeValidation: WordValidationStatus;
+  words: string[];
+  filledWords: string[];
+  guessedLetters: string[];
+  mode: GameMode;
+  activeRowIndex: number; // -1 for theme row, 0..5 for words
+  activeLetterIndex: number;
+  validationStatus: WordValidationStatus[];
+  isSolved: boolean;
+  onSelectCell: (wordIndex: number, letterIndex: number) => void;
+  onSelectThemeCell: (letterIndex: number) => void;
+}
+
+export const ThematikBoard: React.FC<ThematikBoardProps> = ({
+  themeClue,
+  themeWord,
+  filledThemeWord,
+  themeValidation,
+  words,
+  filledWords,
+  guessedLetters,
+  mode,
+  activeRowIndex,
+  activeLetterIndex,
+  validationStatus,
+  isSolved,
+  onSelectCell,
+  onSelectThemeCell,
+}) => {
+  const isGuessMode = mode === 'GUESS';
+
+  // Compute maximum row length across all words and the theme word (at least 7 as seen in GoComics)
+  const maxWordLength = Math.max(
+    7,
+    themeWord.length,
+    ...words.map((w) => w.length)
+  );
+
+  const isThemeIncorrect = themeValidation === 'incorrect';
+
+  return (
+    <div className="flex flex-col items-start select-none">
+      {/* The Clue (e.g. "___ or treat!") */}
+      <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-wide mb-3 text-left">
+        {themeClue}
+      </h1>
+
+      {/* Theme Anchor Word Row (Fillable & affected by Guess and Fill Mode) */}
+      <div
+        className={`flex items-center gap-1.5 sm:gap-2 mb-3 ${
+          isThemeIncorrect ? 'animate-shake' : ''
+        }`}
+      >
+        {Array.from({ length: maxWordLength }).map((_, colIdx) => {
+          const isPartOfWord = colIdx < themeWord.length;
+          const targetChar = isPartOfWord ? themeWord[colIdx] : '';
+          const userChar = isPartOfWord ? filledThemeWord[colIdx] || '' : '';
+          const isRevealedByGuess =
+            isPartOfWord && guessedLetters.includes(targetChar);
+
+          const isThemeCellFocused =
+            !isGuessMode &&
+            activeRowIndex === -1 &&
+            activeLetterIndex === colIdx &&
+            isPartOfWord;
+
+          if (!isPartOfWord) {
+            // Dark inactive padding tile
+            return (
+              <div
+                key={colIdx}
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#250634]/90 border border-purple-950/40"
+              />
+            );
+          }
+
+          // In Guess Mode, show target if guessed or solved. Guessed letter takes precedence over any manually typed character.
+          const displayChar = isSolved
+            ? targetChar
+            : isRevealedByGuess
+            ? targetChar
+            : userChar.trim();
+          const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
+
+          return (
+            <div
+              key={colIdx}
+              onClick={() => onSelectThemeCell(colIdx)}
+              className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
+                isThemeIncorrect
+                  ? 'bg-rose-500 text-white shadow-md'
+                  : isRevealedByGuess
+                  ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                  : isFilled
+                  ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                  : 'bg-[#3b0d52] border-2 border-amber-300/40 shadow-inner hover:border-amber-300/70'
+              } ${
+                isThemeCellFocused
+                  ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
+                  : ''
+              }`}
+            >
+              <span className="leading-none">{displayChar}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Horizontal Divider Line with +20px extra spacing between top clue answer and bottom words */}
+      <div className="w-full h-[3px] bg-gradient-to-r from-amber-400/30 via-[#f5b82e] to-amber-400/30 my-[18px] rounded-full shadow-xs" />
+
+      {/* The 6 Word Rows (6 rows x maxWordLength columns) with +20px extra spacing */}
+      <div className="space-y-1.5 sm:space-y-2 mt-[18px]">
+        {words.map((word, rowIdx) => {
+          const wordLen = word.length;
+          const userFilled = filledWords[rowIdx] || '';
+          const isRowIncorrect = validationStatus[rowIdx] === 'incorrect';
+
+          return (
+            <div
+              key={rowIdx}
+              className={`flex items-center gap-1.5 sm:gap-2 ${
+                isRowIncorrect ? 'animate-shake' : ''
+              }`}
+            >
+              {Array.from({ length: maxWordLength }).map((_, colIdx) => {
+                const isPartOfWord = colIdx < wordLen;
+                const targetChar = isPartOfWord ? word[colIdx] : '';
+                const userChar = isPartOfWord ? userFilled[colIdx] || '' : '';
+                const isRevealedByGuess =
+                  isPartOfWord && guessedLetters.includes(targetChar);
+                const isFocused =
+                  !isGuessMode &&
+                  activeRowIndex === rowIdx &&
+                  activeLetterIndex === colIdx;
+
+                if (!isPartOfWord) {
+                  // Inactive padding tile
+                  return (
+                    <div
+                      key={colIdx}
+                      className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md transition-colors duration-200 bg-[#250634]/90 border border-purple-950/40"
+                    />
+                  );
+                }
+
+                // Displayed letter: if solved, target; else if revealed by guess, target (overwrites typed); else user typed
+                const displayChar = isSolved
+                  ? targetChar
+                  : isRevealedByGuess
+                  ? targetChar
+                  : userChar.trim();
+                const isFilled = Boolean(displayChar && displayChar.trim().length > 0);
+
+                return (
+                  <div
+                    key={colIdx}
+                    onClick={() => onSelectCell(rowIdx, colIdx)}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
+                      isRowIncorrect
+                        ? 'bg-rose-500 text-white shadow-md'
+                        : isRevealedByGuess
+                        ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                        : isFilled
+                        ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                        : isGuessMode
+                        ? 'bg-[#3b0d52] border-2 border-[#f5b82e]/35 shadow-inner hover:border-[#f5b82e]/60'
+                        : 'bg-[#330c48] border-2 border-white/25 shadow-inner hover:border-white/50'
+                    } ${
+                      isFocused
+                        ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
+                        : ''
+                    }`}
+                  >
+                    <span className="leading-none">{displayChar}</span>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Authentic Speech Bubble Pointer beneath the grid (styled with logo colors) */}
+      <div className="w-full flex justify-center mt-5">
+        <div
+          className={`relative px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transition-colors duration-200 bg-[#3d0f57] border border-[#f5b82e]/50 ${
+            isGuessMode ? 'text-[#f5b82e]' : 'text-white'
+          }`}
+        >
+          {/* Triangular pointer pointing UP */}
+          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-[#3d0f57]" />
+          <span>{isGuessMode ? 'Guess a letter' : 'Tap any tile to type'}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
