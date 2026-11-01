@@ -160,19 +160,17 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
 
                 let keyStyle = '';
 
-                if (mode === 'GUESS') {
-                  if (isMatch) {
-                    keyStyle =
-                      'bg-purple-600 text-white border-purple-700 shadow-sm hover:bg-purple-700 opacity-90';
-                  } else if (isMissed) {
-                    keyStyle =
-                      'bg-slate-200/80 dark:bg-slate-800/80 text-slate-400 dark:text-slate-600 border-transparent line-through cursor-not-allowed opacity-60';
-                  } else {
-                    keyStyle =
-                      'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/40 shadow-xs cursor-pointer active:scale-95';
-                  }
+                if (isMatch) {
+                  keyStyle =
+                    'bg-[#f5b82e] text-[#220536] border-amber-300 shadow-md font-extrabold cursor-not-allowed opacity-90';
+                } else if (isMissed) {
+                  keyStyle =
+                    'bg-slate-200/80 dark:bg-slate-800/80 text-slate-400 dark:text-slate-600 border-transparent line-through cursor-not-allowed opacity-60';
+                } else if (mode === 'GUESS') {
+                  keyStyle =
+                    'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/40 shadow-xs cursor-pointer active:scale-95';
                 } else {
-                  // Fill Mode styling
+                  // Fill Mode styling for un-guessed letters
                   keyStyle =
                     'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 shadow-xs cursor-pointer active:scale-95';
                 }
@@ -181,7 +179,7 @@ export const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
                   <button
                     key={letter}
                     type="button"
-                    disabled={isSolved || (mode === 'GUESS' && isGuessed)}
+                    disabled={isSolved || isGuessed}
                     onClick={() => handleKeyClick(letter)}
                     className={`flex-1 max-w-[42px] h-11 sm:h-12 rounded-lg font-bold text-sm sm:text-base border flex items-center justify-center transition-all ${keyStyle}`}
                   >

@@ -121,14 +121,12 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
                   const isMissed = isGuessed && !puzzleLetters.has(letter);
 
                   let keyBg = '';
-                  if (isGuessMode) {
-                    if (isMatch) {
-                      keyBg = 'bg-[#f5b82e] text-[#220536] font-black shadow-md border-t border-amber-200';
-                    } else if (isMissed) {
-                      keyBg = 'bg-[#2b083d] text-purple-400/40 line-through cursor-not-allowed opacity-50';
-                    } else {
-                      keyBg = 'bg-[#491666] hover:bg-[#5b1c7f] active:scale-95 text-white shadow-xs border border-purple-900/40';
-                    }
+                  if (isMatch) {
+                    keyBg = 'bg-[#f5b82e] text-[#220536] font-black shadow-md border-t border-amber-200 cursor-not-allowed opacity-90';
+                  } else if (isMissed) {
+                    keyBg = 'bg-[#2b083d] text-purple-400/40 line-through cursor-not-allowed opacity-50';
+                  } else if (isGuessMode) {
+                    keyBg = 'bg-[#491666] hover:bg-[#5b1c7f] active:scale-95 text-white shadow-xs border border-purple-900/40';
                   } else {
                     // Fill Mode keyboard (Image 3)
                     keyBg = 'bg-[#3b0f54] hover:bg-[#4a1469] active:scale-95 text-white shadow-xs border border-purple-800/40';
@@ -138,7 +136,7 @@ export const GameSidebar: React.FC<GameSidebarProps> = ({
                     <button
                       key={letter}
                       type="button"
-                      disabled={isSolved || (isGuessMode && isGuessed)}
+                      disabled={isSolved || isGuessed}
                       onClick={() => {
                         if (isGuessMode) {
                           onGuessLetter(letter);

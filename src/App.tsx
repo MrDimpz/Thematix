@@ -409,7 +409,7 @@ export default function App() {
   // Fill Mode letter typing (free, zero penalty)
   const handleTypeLetter = useCallback(
     (letter: string) => {
-      if (isSolved || isGivenUp) return;
+      if (isSolved || isGivenUp || guessedLetters.includes(letter)) return;
 
       const target = findNextUnguessedTile(activeRowIndex, activeLetterIndex);
       if (!target) return; // All remaining tiles are fixed guessed letters
