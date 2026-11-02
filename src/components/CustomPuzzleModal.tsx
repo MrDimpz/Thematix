@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Sparkles, ArrowDownAZ, Play } from 'lucide-react';
 import { Puzzle } from '../types/game';
+import { normalizeAndRegisterWord } from '../utils/wordSplits';
 
 interface CustomPuzzleModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ export const CustomPuzzleModal: React.FC<CustomPuzzleModalProps> = ({
   if (!isOpen) return null;
 
   const handleWordChange = (idx: number, val: string) => {
-    const cleaned = val.replace(/[^A-Za-z]/g, '').toUpperCase();
+    const cleaned = val.replace(/[^A-Za-z\s-]/g, '').toUpperCase();
     const next = [...words];
     next[idx] = cleaned;
     setWords(next);
@@ -36,12 +37,15 @@ export const CustomPuzzleModal: React.FC<CustomPuzzleModalProps> = ({
       return;
     }
 
-    if (!themeWord.trim()) {
+    const normalizedThemeWord = normalizeAndRegisterWord(themeWord);
+    if (!normalizedThemeWord) {
       setError('Please provide a Theme Anchor / Category title.');
       return;
     }
 
-    const cleanedWords = words.map((w) => w.trim().toUpperCase()).filter((w) => w.length > 0);
+    const cleanedWords = words
+      .map((w) => normalizeAndRegisterWord(w))
+      .filter((w) => w.length > 0);
 
     if (cleanedWords.length !== 6) {
       setError('Please enter all 6 words.');
@@ -50,7 +54,7 @@ export const CustomPuzzleModal: React.FC<CustomPuzzleModalProps> = ({
 
     for (const w of cleanedWords) {
       if (w.length < 3 || w.length > 12) {
-        setError('Words should be between 3 and 12 characters long.');
+        setError('Words should be between 3 and 12 letters long.');
         return;
       }
     }
@@ -63,7 +67,7 @@ export const CustomPuzzleModal: React.FC<CustomPuzzleModalProps> = ({
       date: new Date().toISOString().split('T')[0],
       formattedDate: 'Custom Puzzle',
       themeClue: themeClue.trim(),
-      themeWord: themeWord.trim().toUpperCase(),
+      themeWord: normalizedThemeWord,
       words: sortedWords,
       difficulty: 'Medium',
       funFact: 'Custom player-generated puzzle! Solved in authentic alphabetical order.',

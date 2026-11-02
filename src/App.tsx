@@ -72,19 +72,9 @@ export default function App() {
   );
 
   useEffect(() => {
-    let prevLondonDay = getLondonDateString();
-
     const interval = setInterval(() => {
       const msLeft = getMsUntilNextLondonMidnight();
       setCountdownText(formatTimeRemaining(msLeft));
-
-      const currentLondonDay = getLondonDateString();
-      if (currentLondonDay !== prevLondonDay) {
-        prevLondonDay = currentLondonDay;
-        // 00:00 London UK Time: New Daily Puzzle is Released!
-        const newDaily = getTodayPuzzle();
-        setPuzzle(newDaily);
-      }
     }, 1000);
 
     return () => clearInterval(interval);
@@ -814,10 +804,10 @@ export default function App() {
   // Give Up / Reveal answers
   const handleGiveUp = () => {
     if (isSolved) return;
-    const confirm = window.confirm(
-      'Are you sure you want to reveal the answers for this puzzle?'
-    );
-    if (!confirm) return;
+    if (solveRevertTimerRef.current) {
+      clearTimeout(solveRevertTimerRef.current);
+      solveRevertTimerRef.current = null;
+    }
 
     setIsGivenUp(true);
     setIsSolved(true);
@@ -834,18 +824,23 @@ export default function App() {
     );
   };
 
-  // Reset current puzzle
+  // Reset current puzzle to its exact starting state
   const handleReset = () => {
-    const confirm = window.confirm('Reset this puzzle? All progress will be cleared.');
-    if (!confirm) return;
+    if (solveRevertTimerRef.current) {
+      clearTimeout(solveRevertTimerRef.current);
+      solveRevertTimerRef.current = null;
+    }
 
+    sound.playKeyClick();
+    setMode('GUESS');
+    setView('CHOICE');
     setGuessedLetters([]);
     setLetterGuessesCount(0);
     setFilledWords(['', '', '', '', '', '']);
     setFilledThemeWord('');
     setIsSolved(false);
     setIsGivenUp(false);
-    setView('CHOICE');
+    setShowWinModal(false);
     setWordValidation(['neutral', 'neutral', 'neutral', 'neutral', 'neutral', 'neutral']);
     setThemeValidation('neutral');
     setActiveRowIndex(0);

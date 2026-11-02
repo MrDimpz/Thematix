@@ -1,5 +1,6 @@
 import React from 'react';
 import { GameMode, WordValidationStatus } from '../types/game';
+import { getWordBreakAfterIndices } from '../utils/wordSplits';
 
 interface ThematikBoardProps {
   themeClue: string;
@@ -45,6 +46,8 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
     ...words.map((w) => w.length)
   );
 
+  const themeWordBreaks = getWordBreakAfterIndices(themeWord);
+
   const isThemeIncorrect = themeValidation === 'incorrect';
   const isThemeEvaluated = themeValidation === 'incorrect' || themeValidation === 'incomplete';
   const isAnyEvaluatedWrong =
@@ -74,6 +77,8 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
           const userChar = isPartOfWord ? filledThemeWord[colIdx] || '' : '';
           const isRevealedByGuess =
             isPartOfWord && guessedLetters.includes(targetChar);
+          const hasWordBreakAfter =
+            isPartOfWord && themeWordBreaks.includes(colIdx);
 
           const isThemeCellFocused =
             !isGuessMode &&
@@ -109,24 +114,32 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
             userChar.trim().toUpperCase() !== targetChar.toUpperCase();
 
           return (
-            <div
-              key={colIdx}
-              onClick={() => onSelectThemeCell(colIdx)}
-              className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
-                isTileWrong
-                  ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
-                  : isRevealedByGuess
-                  ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
-                  : isFilled
-                  ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
-                  : 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
-              } ${
-                isThemeCellFocused
-                  ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
-                  : ''
-              }`}
-            >
-              <span className="leading-none">{displayChar}</span>
+            <div key={colIdx} className="relative flex items-center">
+              <div
+                onClick={() => onSelectThemeCell(colIdx)}
+                className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
+                  isTileWrong
+                    ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
+                    : isRevealedByGuess
+                    ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                    : isFilled
+                    ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                    : 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
+                } ${
+                  isThemeCellFocused
+                    ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
+                    : ''
+                }`}
+              >
+                <span className="leading-none">{displayChar}</span>
+              </div>
+              {hasWordBreakAfter && (
+                <div
+                  aria-hidden="true"
+                  title="Word break"
+                  className="pointer-events-none absolute -top-1 -bottom-1 left-full ml-[1.5px] sm:ml-[2px] w-[3px] sm:w-[4px] rounded-full bg-[#f5b82e] shadow-[0_0_6px_rgba(24,4,36,0.95)] z-20"
+                />
+              )}
             </div>
           );
         })}
@@ -143,6 +156,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
           const isRowIncorrect = validationStatus[rowIdx] === 'incorrect';
           const isRowEvaluated =
             validationStatus[rowIdx] === 'incorrect' || validationStatus[rowIdx] === 'incomplete';
+          const rowWordBreaks = getWordBreakAfterIndices(word);
 
           return (
             <div
@@ -157,6 +171,8 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                 const userChar = isPartOfWord ? userFilled[colIdx] || '' : '';
                 const isRevealedByGuess =
                   isPartOfWord && guessedLetters.includes(targetChar);
+                const hasWordBreakAfter =
+                  isPartOfWord && rowWordBreaks.includes(colIdx);
                 const isFocused =
                   !isGuessMode &&
                   activeRowIndex === rowIdx &&
@@ -190,26 +206,34 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
                   userChar.trim().toUpperCase() !== targetChar.toUpperCase();
 
                 return (
-                  <div
-                    key={colIdx}
-                    onClick={() => onSelectCell(rowIdx, colIdx)}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
-                      isTileWrong
-                        ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
-                        : isRevealedByGuess
-                        ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
-                        : isFilled
-                        ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
-                        : isGuessMode
-                        ? 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
-                        : 'bg-[#561a7a] border-2 border-amber-200/80 shadow-md shadow-black/40 hover:bg-[#662090] hover:border-white'
-                    } ${
-                      isFocused
-                        ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
-                        : ''
-                    }`}
-                  >
-                    <span className="leading-none">{displayChar}</span>
+                  <div key={colIdx} className="relative flex items-center">
+                    <div
+                      onClick={() => onSelectCell(rowIdx, colIdx)}
+                      className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md font-mono font-black text-[32px] sm:text-[38px] md:text-[45px] leading-none flex items-center justify-center transition-all duration-200 cursor-pointer select-none ${
+                        isTileWrong
+                          ? 'bg-rose-500 text-white shadow-md ring-2 ring-rose-400'
+                          : isRevealedByGuess
+                          ? 'bg-gradient-to-b from-[#ffcf48] via-[#f5b82e] to-[#e6a822] text-[#220536] shadow-lg border-t-2 border-amber-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                          : isFilled
+                          ? 'bg-white text-[#220536] shadow-md border-t-2 border-slate-100 ring-2 ring-amber-300/80 scale-[1.02]'
+                          : isGuessMode
+                          ? 'bg-[#5e1d85] border-2 border-[#f5b82e]/90 shadow-md shadow-black/40 hover:bg-[#6e249b] hover:border-[#f5b82e]'
+                          : 'bg-[#561a7a] border-2 border-amber-200/80 shadow-md shadow-black/40 hover:bg-[#662090] hover:border-white'
+                      } ${
+                        isFocused
+                          ? 'ring-4 ring-[#f5b82e] ring-offset-2 ring-offset-[#250838] scale-105 z-10'
+                          : ''
+                      }`}
+                    >
+                      <span className="leading-none">{displayChar}</span>
+                    </div>
+                    {hasWordBreakAfter && (
+                      <div
+                        aria-hidden="true"
+                        title="Word break"
+                        className="pointer-events-none absolute -top-1 -bottom-1 left-full ml-[1.5px] sm:ml-[2px] w-[3px] sm:w-[4px] rounded-full bg-[#f5b82e] shadow-[0_0_6px_rgba(24,4,36,0.95)] z-20"
+                      />
+                    )}
                   </div>
                 );
               })}
