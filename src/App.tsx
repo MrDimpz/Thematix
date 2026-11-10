@@ -848,16 +848,120 @@ export default function App() {
     persistProgress([], 0, ['', '', '', '', '', ''], '', false, false);
   };
 
+  const mobileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const focusMobileKeyboard = useCallback(() => {
+    if (isSolved) return;
+    if (mobileInputRef.current) {
+      mobileInputRef.current.value = ' ';
+      mobileInputRef.current.focus({ preventScroll: true });
+    }
+  }, [isSolved]);
+
+  const handleMobileInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isSolved) return;
+
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      sound.playKeyClick();
+      handleBackspace();
+      if (mobileInputRef.current) {
+        mobileInputRef.current.value = ' ';
+      }
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      mobileInputRef.current?.blur();
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (activeRowIndex === 0) {
+        setActiveRowIndex(-1);
+        setActiveLetterIndex(0);
+      } else if (activeRowIndex > 0) {
+        setActiveRowIndex(activeRowIndex - 1);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (activeRowIndex === -1) {
+        setActiveRowIndex(0);
+        setActiveLetterIndex(0);
+      } else if (activeRowIndex < puzzle.words.length - 1) {
+        setActiveRowIndex(activeRowIndex + 1);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      setActiveLetterIndex((prev) => Math.max(0, prev - 1));
+      return;
+    }
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const maxLen =
+        activeRowIndex === -1
+          ? puzzle.themeWord.length
+          : puzzle.words[activeRowIndex].length;
+      setActiveLetterIndex((prev) => Math.min(maxLen - 1, prev + 1));
+      return;
+    }
+  };
+
+  const handleMobileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isSolved) {
+      e.target.value = ' ';
+      return;
+    }
+
+    const val = e.target.value;
+
+    // If sentinel space was deleted (e.g. Android soft keyboard Backspace)
+    if (val.length === 0) {
+      sound.playKeyClick();
+      handleBackspace();
+      e.target.value = ' ';
+      return;
+    }
+
+    // Extract any newly typed alphabetic character
+    const letters = val.replace(/[^a-zA-Z]/g, '').toUpperCase();
+    if (letters.length > 0) {
+      const char = letters[letters.length - 1];
+      if (mode === 'GUESS') {
+        if (view === 'CHOICE') setView('KEYBOARD');
+        handleGuessLetter(char);
+      } else {
+        sound.playKeyClick();
+        if (view === 'CHOICE') setView('KEYBOARD');
+        handleTypeLetter(char);
+      }
+    }
+
+    // Reset sentinel space for continuous typing & backspace detection
+    e.target.value = ' ';
+  };
+
   const handleSelectGuessMode = () => {
     sound.playModeToggle('GUESS');
     setMode('GUESS');
     setView('KEYBOARD');
+    focusMobileKeyboard();
   };
 
   const handleSelectFillMode = () => {
     sound.playModeToggle('FILL');
     setMode('FILL');
     setView('KEYBOARD');
+    focusMobileKeyboard();
   };
 
   const handleSelectWordCell = (rowIdx: number, colIdx: number) => {
@@ -870,6 +974,7 @@ export default function App() {
     if (view !== 'KEYBOARD') {
       setView('KEYBOARD');
     }
+    focusMobileKeyboard();
   };
 
   const handleSelectThemeCell = (colIdx: number) => {
@@ -882,6 +987,7 @@ export default function App() {
     if (view !== 'KEYBOARD') {
       setView('KEYBOARD');
     }
+    focusMobileKeyboard();
   };
 
   const handleToggleMute = () => {
@@ -910,6 +1016,22 @@ export default function App() {
         isGuessMode ? 'bg-[#230638]' : 'bg-[#1b032e]'
       }`}
     >
+      {/* Hidden input to trigger native pop-up keyboard on mobile & tablet devices */}
+      <input
+        ref={mobileInputRef}
+        type="text"
+        inputMode="text"
+        autoCapitalize="characters"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        defaultValue=" "
+        aria-label="Mobile keyboard input"
+        onKeyDown={handleMobileInputKeyDown}
+        onChange={handleMobileInputChange}
+        className="fixed top-1/2 left-1/2 w-px h-px opacity-0 pointer-events-none text-base -z-10"
+      />
+
       {/* GoComics Top Navbar */}
       <GoComicsNav
         currentDateStr={puzzle.formattedDate}
@@ -945,6 +1067,7 @@ export default function App() {
             isSolved={isSolved}
             onSelectCell={handleSelectWordCell}
             onSelectThemeCell={handleSelectThemeCell}
+            onOpenMobileKeyboard={focusMobileKeyboard}
           />
 
           {/* Right Side: 00 GUESSES ribbon, 4x7 Alphabetical Keyboard or Choice Cards, Mode Toggle, SOLVE button */}

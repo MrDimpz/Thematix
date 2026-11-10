@@ -1,4 +1,5 @@
 import React from 'react';
+import { Keyboard } from 'lucide-react';
 import { GameMode, WordValidationStatus } from '../types/game';
 import { getWordBreakAfterIndices } from '../utils/wordSplits';
 
@@ -18,6 +19,7 @@ interface ThematikBoardProps {
   isSolved: boolean;
   onSelectCell: (wordIndex: number, letterIndex: number) => void;
   onSelectThemeCell: (letterIndex: number) => void;
+  onOpenMobileKeyboard?: () => void;
 }
 
 export const ThematikBoard: React.FC<ThematikBoardProps> = ({
@@ -36,6 +38,7 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
   isSolved,
   onSelectCell,
   onSelectThemeCell,
+  onOpenMobileKeyboard,
 }) => {
   const isGuessMode = mode === 'GUESS';
 
@@ -261,17 +264,21 @@ export const ThematikBoard: React.FC<ThematikBoardProps> = ({
           </div>
         </div>
 
-        {/* Speech Bubble Pointer */}
+        {/* Speech Bubble Pointer (tappable on mobile to pop up device keyboard) */}
         <div className="flex-1 flex justify-center">
-          <div
-            className={`relative px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transition-colors duration-200 bg-[#3d0f57] border border-[#f5b82e]/50 ${
+          <button
+            type="button"
+            onClick={onOpenMobileKeyboard}
+            className={`relative px-6 py-2.5 rounded-full font-bold text-sm tracking-wide shadow-lg transition-colors duration-200 bg-[#3d0f57] hover:bg-[#4b136b] border border-[#f5b82e]/50 flex items-center gap-2 cursor-pointer ${
               isGuessMode ? 'text-[#f5b82e]' : 'text-white'
             }`}
+            title="Tap to open device keyboard"
           >
             {/* Triangular pointer pointing UP */}
             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-x-8 border-x-transparent border-b-8 border-b-[#3d0f57]" />
+            <Keyboard className="w-4 h-4 sm:hidden shrink-0 opacity-85" />
             <span>{isGuessMode ? 'Guess a letter' : 'Tap any tile to type'}</span>
-          </div>
+          </button>
         </div>
       </div>
     </div>
