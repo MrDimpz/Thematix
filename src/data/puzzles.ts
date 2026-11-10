@@ -743,6 +743,486 @@ export const COMPOUND_PUZZLES_BANK: PuzzleTemplate[] = [
     words: ['BOTTOM', 'CANDY', 'CLIMBING', 'GARDEN', 'SOLID', 'STAR'],
     difficulty: 'Medium',
     funFact: 'Every lower word forms a compound phrase with the theme: Rock bottom, rock candy, rock climbing, rock garden, rock solid, and rock star!'
+  },
+  // 72. Compound: WIND
+  {
+    clue: '"Moving current of outdoor breeze"',
+    themeWord: 'WIND',
+    words: ['BREAKER', 'CHIME', 'FALL', 'MILL', 'PIPE', 'SHIELD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with WIND: Windbreaker, windchime, windfall, windmill, windpipe, windshield.'
+  },
+  // 73. Compound: BACK
+  {
+    clue: '"Rear spine or opposite of front"',
+    themeWord: 'BACK',
+    words: ['BONE', 'DROP', 'FIRE', 'GROUND', 'PACK', 'STAGE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with BACK: Backbone, backdrop, backfire, background, backpack, backstage.'
+  },
+  // 74. Compound: OVER
+  {
+    clue: '"Above and across the top"',
+    themeWord: 'OVER',
+    words: ['BOARD', 'COAT', 'DRIVE', 'FLOW', 'LOOK', 'NIGHT'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with OVER: Overboard, overcoat, overdrive, overflow, overlook, overnight.'
+  },
+  // 75. Compound: UNDER
+  {
+    clue: '"Beneath the surface level"',
+    themeWord: 'UNDER',
+    words: ['COVER', 'CURRENT', 'DOG', 'GROUND', 'LINE', 'WORLD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with UNDER: Undercover, undercurrent, underdog, underground, underline, underworld.'
+  },
+  // 76. Compound: OUT
+  {
+    clue: '"Away from the inside"',
+    themeWord: 'OUT',
+    words: ['BREAK', 'CAST', 'COME', 'FIELD', 'LAW', 'LINE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with OUT: Outbreak, outcast, outcome, outfield, outlaw, outline.'
+  },
+  // 77. Compound: DOWN
+  {
+    clue: '"Toward a lower position"',
+    themeWord: 'DOWN',
+    words: ['FALL', 'HILL', 'POUR', 'STAGE', 'STAIRS', 'TOWN'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with DOWN: Downfall, downhill, downpour, downstage, downstairs, downtown.'
+  },
+  // 78. Compound: UP
+  {
+    clue: '"Toward the sky or higher ground"',
+    themeWord: 'UP',
+    words: ['BEAT', 'GRADE', 'HILL', 'LIFT', 'RIGHT', 'STAIRS'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with UP: Upbeat, upgrade, uphill, uplift, upright, upstairs.'
+  },
+  // 79. Compound: HIGH
+  {
+    clue: '"Lofty elevation above the rest"',
+    themeWord: 'HIGH',
+    words: ['BROW', 'CHAIR', 'LAND', 'LIGHT', 'RISE', 'WAY'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with HIGH: Highbrow, highchair, highland, highlight, highrise, highway.'
+  },
+  // 80. Compound: LOW
+  {
+    clue: '"Close to the ground or quiet"',
+    themeWord: 'LOW',
+    words: ['BROW', 'DOWN', 'KEY', 'LAND', 'LIFE', 'TIDE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with LOW: Lowbrow, lowdown, lowkey, lowland, lowlife, low tide.'
+  },
+  // 81. Compound: SHORT
+  {
+    clue: '"Brief in length or stature"',
+    themeWord: 'SHORT',
+    words: ['BREAD', 'CAKE', 'CHANGE', 'COMING', 'CUT', 'HAND'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with SHORT: Shortbread, shortcake, shortchange, shortcoming, shortcut, shorthand.'
+  },
+  // 82. Compound: LONG
+  {
+    clue: '"Extended in distance or duration"',
+    themeWord: 'LONG',
+    words: ['BOAT', 'BOW', 'HAIR', 'HAND', 'HORN', 'SHOT'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with LONG: Longboat, longbow, longhair, longhand, longhorn, longshot.'
+  },
+  // 83. Compound: HARD
+  {
+    clue: '"Solid, firm, and unyielding"',
+    themeWord: 'HARD',
+    words: ['BACK', 'BALL', 'COPY', 'HAT', 'WARE', 'WOOD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with HARD: Hardback, hardball, hardcopy, hardhat, hardware, hardwood.'
+  },
+  // 84. Compound: SOFT
+  {
+    clue: '"Gentle and plush to the touch"',
+    themeWord: 'SOFT',
+    words: ['BALL', 'BOILED', 'DRINK', 'SERVE', 'WARE', 'WOOD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with SOFT: Softball, soft-boiled, soft drink, soft serve, software, softwood.'
+  },
+  // 85. Compound: COLD
+  {
+    clue: '"Chilly winter temperature"',
+    themeWord: 'COLD',
+    words: ['BLOOD', 'CREAM', 'CUT', 'FEET', 'FRONT', 'SNAP'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with COLD: Cold-blooded, cold cream, cold cut, cold feet, cold front, cold snap.'
+  },
+  // 86. Compound: HOT
+  {
+    clue: '"Sizzling high temperature"',
+    themeWord: 'HOT',
+    words: ['BED', 'CAKE', 'DOG', 'HEAD', 'HOUSE', 'LINE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with HOT: Hotbed, hotcake, hotdog, hothead, hothouse, hotline.'
+  },
+  // 87. Compound: NEW
+  {
+    clue: '"Freshly minted or recently arrived"',
+    themeWord: 'NEW',
+    words: ['BORN', 'CAST', 'COMER', 'FANGLED', 'FOUND', 'WAVE'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with NEW: Newborn, newscast, newcomer, newfangled, newfound, new wave.'
+  },
+  // 88. Compound: OLD
+  {
+    clue: '"From a bygone vintage era"',
+    themeWord: 'OLD',
+    words: ['FASHION', 'GROWTH', 'HAND', 'MAID', 'SCHOOL', 'TIMER'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with OLD: Old-fashioned, old-growth, old hand, old maid, old school, old-timer.'
+  },
+  // 89. Compound: GOOD
+  {
+    clue: '"Virtuous, pleasant, or fine"',
+    themeWord: 'GOOD',
+    words: ['BYE', 'FELLOW', 'HEART', 'NIGHT', 'SPEED', 'WILL'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with GOOD: Goodbye, goodfellow, good-hearted, goodnight, godspeed, goodwill.'
+  },
+  // 90. Compound: WILD
+  {
+    clue: '"Untamed in nature"',
+    themeWord: 'WILD',
+    words: ['CARD', 'CAT', 'FIRE', 'FLOWER', 'FOWL', 'LIFE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with WILD: Wildcard, wildcat, wildfire, wildflower, waterfowl/wildfowl, wildlife.'
+  },
+  // 91. Compound: FREE
+  {
+    clue: '"At liberty with zero cost"',
+    themeWord: 'FREE',
+    words: ['BIRD', 'BOOT', 'DOM', 'FALL', 'LOAD', 'STYLE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FREE: Freebird, freebooter, freedom, freefall, freeload, freestyle.'
+  },
+  // 92. Compound: OPEN
+  {
+    clue: '"Unlocked and welcoming"',
+    themeWord: 'OPEN',
+    words: ['AIR', 'DOOR', 'ENDED', 'HAND', 'HOUSE', 'WORK'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with OPEN: Open-air, open-door, open-ended, openhanded, open house, openwork.'
+  },
+  // 93. Compound: HALF
+  {
+    clue: '"One of two equal parts"',
+    themeWord: 'HALF',
+    words: ['BACK', 'BAKED', 'MOON', 'PIPE', 'TIME', 'WAY'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with HALF: Halfback, half-baked, half-moon, halfpipe, halftime, halfway.'
+  },
+  // 94. Compound: FULL
+  {
+    clue: '"Filled to maximum capacity"',
+    themeWord: 'FULL',
+    words: ['BACK', 'BLOWN', 'GROWN', 'HOUSE', 'MOON', 'SCALE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FULL: Fullback, full-blown, full-grown, full house, full moon, full-scale.'
+  },
+  // 95. Compound: FIRST
+  {
+    clue: '"Leading at the very front"',
+    themeWord: 'FIRST',
+    words: ['AID', 'BORN', 'CLASS', 'HAND', 'LADY', 'MATE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FIRST: First aid, firstborn, first-class, firsthand, first lady, first mate.'
+  },
+  // 96. Compound: BACKWARD / FORE
+  {
+    clue: '"Positioned in front or ahead"',
+    themeWord: 'FORE',
+    words: ['ARM', 'CAST', 'FATHER', 'GROUND', 'HEAD', 'WORD'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with FORE: Forearm, forecast, forefather, foreground, forehead, foreword.'
+  },
+  // 97. Compound: AFTER
+  {
+    clue: '"Following later in time"',
+    themeWord: 'AFTER',
+    words: ['GLOW', 'LIFE', 'MATH', 'NOON', 'SHOCK', 'TASTE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with AFTER: Afterglow, afterlife, aftermath, afternoon, aftershock, aftertaste.'
+  },
+  // 98. Compound: SPRING
+  {
+    clue: '"Season of budding blossoms"',
+    themeWord: 'SPRING',
+    words: ['BOARD', 'BREAK', 'CLEAN', 'FIELD', 'TIME', 'WATER'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with SPRING: Springboard, spring break, spring cleaning, springfield, springtime, springwater.'
+  },
+  // 99. Compound: SUMMER
+  {
+    clue: '"Warmest sunny season"',
+    themeWord: 'SUMMER',
+    words: ['CAMP', 'HOUSE', 'LAND', 'SALT', 'SCHOOL', 'TIME'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with SUMMER: Summer camp, summerhouse, summerland, somersault, summer school, summertime.'
+  },
+  // 100. Compound: WINTER
+  {
+    clue: '"Frosty season of snow"',
+    themeWord: 'WINTER',
+    words: ['BERRY', 'COAT', 'GREEN', 'LAND', 'SOLSTICE', 'TIME'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with WINTER: Winterberry, winter coat, wintergreen, winterland, winter solstice, wintertime.'
+  },
+  // 101. Compound: CLOUD
+  {
+    clue: '"Fluffy white vapor in the sky"',
+    themeWord: 'CLOUD',
+    words: ['BERRY', 'BURST', 'CAP', 'COVER', 'LAND', 'NINE'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with CLOUD: Cloudberry, cloudburst, cloudcap, cloud cover, cloudland, cloud nine.'
+  },
+  // 102. Compound: STORM
+  {
+    clue: '"Tempest of thunder and lightning"',
+    themeWord: 'STORM',
+    words: ['BIRD', 'CELLAR', 'CLOUD', 'DOOR', 'FRONT', 'WATER'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with STORM: Stormbird, storm cellar, storm cloud, storm door, storm front, stormwater.'
+  },
+  // 103. Compound: THUNDER
+  {
+    clue: '"Booming rumble after lightning"',
+    themeWord: 'THUNDER',
+    words: ['BIRD', 'BOLT', 'CLAP', 'CLOUD', 'HEAD', 'STORM'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with THUNDER: Thunderbird, thunderbolt, thunderclap, thundercloud, thunderhead, thunderstorm.'
+  },
+  // 104. Compound: SAND
+  {
+    clue: '"Fine grains along the desert or beach"',
+    themeWord: 'SAND',
+    words: ['BAG', 'BANK', 'BAR', 'BOX', 'CASTLE', 'STONE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with SAND: Sandbag, sandbank, sandbar, sandbox, sandcastle, sandstone.'
+  },
+  // 105. Compound: STONE
+  {
+    clue: '"Solid mineral pebble or boulder"',
+    themeWord: 'STONE',
+    words: ['AGE', 'COLD', 'CUTTER', 'WALL', 'WARE', 'WORK'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with STONE: Stone Age, stone-cold, stonecutter, stonewall, stoneware, stonework.'
+  },
+  // 106. Compound: GLASS
+  {
+    clue: '"Transparent window pane material"',
+    themeWord: 'GLASS',
+    words: ['BLOWER', 'CUTTER', 'EYE', 'HOUSE', 'JAW', 'WARE'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with GLASS: Glassblower, glasscutter, glass eye, glasshouse, glass jaw, glassware.'
+  },
+  // 107. Compound: STEEL
+  {
+    clue: '"Tempered alloy of iron and carbon"',
+    themeWord: 'STEEL',
+    words: ['BAND', 'DRUM', 'GUITAR', 'MILL', 'WOOL', 'WORK'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with STEEL: Steel band, steel drum, steel guitar, steel mill, steel wool, steelwork.'
+  },
+  // 108. Compound: COPPER
+  {
+    clue: '"Reddish-brown conductive metal"',
+    themeWord: 'COPPER',
+    words: ['FIELD', 'HEAD', 'MINE', 'PLATE', 'SMITH', 'WARE'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with COPPER: Copperfield, copperhead, copper mine, copperplate, coppersmith, copperware.'
+  },
+  // 109. Compound: STEAM
+  {
+    clue: '"Vapor rising from a boiling kettle"',
+    themeWord: 'STEAM',
+    words: ['BOAT', 'ENGINE', 'IRON', 'PIPE', 'ROLLER', 'SHIP'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with STEAM: Steamboat, steam engine, steam iron, steampipe, steamroller, steamship.'
+  },
+  // 110. Compound: SMOKE
+  {
+    clue: '"Curling plume from a campfire"',
+    themeWord: 'SMOKE',
+    words: ['BOMB', 'HOUSE', 'JACK', 'SCREEN', 'SIGNAL', 'STACK'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with SMOKE: Smoke bomb, smokehouse, smokejack, smokescreen, smoke signal, smokestack.'
+  },
+  // 111. Compound: ASH
+  {
+    clue: '"Silvery-gray hearth residue"',
+    themeWord: 'ASH',
+    words: ['BIN', 'CAN', 'FALL', 'LAR', 'PAN', 'TRAY'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with ASH: Ashbin, ashcan, ashfall, ashlar, ashpan, ashtray.'
+  },
+  // 112. Compound:COAL
+  {
+    clue: '"Black carbon fuel from a seam"',
+    themeWord: 'COAL',
+    words: ['BED', 'BIN', 'FACE', 'FIELD', 'MINE', 'TAR'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with COAL: Coalbed, coalbin, coalface, coalfield, coalmine, coal tar.'
+  },
+  // 113. Compound: RIVER
+  {
+    clue: '"Flowing freshwater stream"',
+    themeWord: 'RIVER',
+    words: ['BANK', 'BED', 'BOAT', 'FRONT', 'HEAD', 'SIDE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with RIVER: Riverbank, riverbed, riverboat, riverfront, riverhead, riverside.'
+  },
+  // 114. Compound: LAKE
+  {
+    clue: '"Inland body of calm fresh water"',
+    themeWord: 'LAKE',
+    words: ['BED', 'FRONT', 'HOUSE', 'LAND', 'SHORE', 'SIDE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with LAKE: Lakebed, lakefront, lakehouse, lakeland, lakeshore, lakeside.'
+  },
+  // 115. Compound: HILL
+  {
+    clue: '"Grassy mound smaller than a mountain"',
+    themeWord: 'HILL',
+    words: ['BILLY', 'CREST', 'FORT', 'OCK', 'SIDE', 'TOP'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with HILL: Hillbilly, hillcrest, hillfort, hillock, hillside, hilltop.'
+  },
+  // 116. Compound: FIELD
+  {
+    clue: '"Open meadow or athletic pitch"',
+    themeWord: 'FIELD',
+    words: ['CORN', 'DAY', 'GLASS', 'GOAL', 'MOUSE', 'WORK'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FIELD: Cornfield, field day, field glass, field goal, field mouse, fieldwork.'
+  },
+  // 117. Compound: FARM
+  {
+    clue: '"Countryside homestead with crops and barns"',
+    themeWord: 'FARM',
+    words: ['HAND', 'HOUSE', 'LAND', 'STEAD', 'WIFE', 'YARD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FARM: Farmhand, farmhouse, farmland, farmstead, farmwife, farmyard.'
+  },
+  // 118. Compound: BARN
+  {
+    clue: '"Red timber building on a ranch"',
+    themeWord: 'BARN',
+    words: ['DANCE', 'DOOR', 'OWL', 'STORM', 'SWALLOW', 'YARD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with BARN: Barn dance, barn door, barn owl, barnstorm, barn swallow, barnyard.'
+  },
+  // 119. Compound: MILL
+  {
+    clue: '"Grinding wheel powered by wind or water"',
+    themeWord: 'MILL',
+    words: ['DAM', 'POND', 'RACE', 'STONE', 'STREAM', 'WRIGHT'],
+    difficulty: 'Medium',
+    funFact: 'Forms compound terms with MILL: Milldam, millpond, millrace, millstone, millstream, millwright.'
+  },
+  // 120. Compound: GATE
+  {
+    clue: '"Hinged entrance in a garden wall"',
+    themeWord: 'GATE',
+    words: ['CRASH', 'FOLD', 'HOUSE', 'KEEP', 'POST', 'WAY'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with GATE: Gatecrash, gatefold, gatehouse, gatekeeper, gatepost, gateway.'
+  },
+  // 121. Compound: DOOR
+  {
+    clue: '"Swinging panel at a room entrance"',
+    themeWord: 'DOOR',
+    words: ['BELL', 'KNOB', 'MAT', 'NAIL', 'STEP', 'WAY'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with DOOR: Doorbell, doorknob, doormat, doornail, doorstep, doorway.'
+  },
+  // 122. Compound: WALL
+  {
+    clue: '"Upright brick or plaster partition"',
+    themeWord: 'WALL',
+    words: ['BOARD', 'EYE', 'FLOWER', 'PAPER', 'SOCKET', 'STONE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with WALL: Wallboard, walleye, wallflower, wallpaper, wall socket, stonewall.'
+  },
+  // 123. Compound: FLOOR
+  {
+    clue: '"Surface you walk across indoors"',
+    themeWord: 'FLOOR',
+    words: ['BOARD', 'CLOTH', 'LAMP', 'MAT', 'PLAN', 'SHOW'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with FLOOR: Floorboard, floorcloth, floor lamp, floormat, floorplan, floorshow.'
+  },
+  // 124. Compound: ROOF
+  {
+    clue: '"Shingled shelter atop a house"',
+    themeWord: 'ROOF',
+    words: ['GARDEN', 'LINE', 'RACK', 'TILE', 'TOP', 'TREE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with ROOF: Roof garden, roofline, roof rack, roof tile, rooftop, rooftree.'
+  },
+  // 125. Compound: WINDOW
+  {
+    clue: '"Framed glass opening in a wall"',
+    themeWord: 'WINDOW',
+    words: ['BOX', 'FRAME', 'LEDGE', 'PANE', 'SEAT', 'SILL'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with WINDOW: Window box, window frame, window ledge, windowpane, window seat, windowsill.'
+  },
+  // 126. Compound: TABLE
+  {
+    clue: '"Flat-topped dining furniture"',
+    themeWord: 'TABLE',
+    words: ['CLOTH', 'LAND', 'SPOON', 'TALK', 'TENNIS', 'WARE'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with TABLE: Tablecloth, tableland, tablespoon, table talk, table tennis, tableware.'
+  },
+  // 127. Compound: CHAIR
+  {
+    clue: '"Seat with a backrest"',
+    themeWord: 'CHAIR',
+    words: ['ARM', 'DECK', 'HIGH', 'LIFT', 'MAN', 'PUSH'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with CHAIR: Armchair, deckchair, highchair, chairlift, chairman, pushchair.'
+  },
+  // 128. Compound: BED
+  {
+    clue: '"Cozy mattress furniture for sleeping"',
+    themeWord: 'BED',
+    words: ['CHAMBER', 'FELLOW', 'PAN', 'POST', 'ROOM', 'SPREAD'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with BED: Bedchamber, bedfellow, bedpan, bedpost, bedroom, bedspread.'
+  },
+  // 129. Compound: CLOCK
+  {
+    clue: '"Ticking instrument that tells the hour"',
+    themeWord: 'CLOCK',
+    words: ['ALARM', 'FACE', 'HAND', 'TOWER', 'WISE', 'WORK'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with CLOCK: Alarm clock, clockface, clock hand, clocktower, clockwise, clockwork.'
+  },
+  // 130. Compound: BELL
+  {
+    clue: '"Hollow metal chime that rings"',
+    themeWord: 'BELL',
+    words: ['BIRD', 'BOY', 'FLOWER', 'FOUNDER', 'HOP', 'TOWER'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with BELL: Bellbird, bellboy, bellflower, bellfounder, bellhop, belltower.'
+  },
+  // 131. Compound: DRUM
+  {
+    clue: '"Rhythmic percussion instrument beaten with sticks"',
+    themeWord: 'DRUM',
+    words: ['BEAT', 'EAR', 'HEAD', 'KETTLE', 'ROLL', 'STICK'],
+    difficulty: 'Easy',
+    funFact: 'Forms compound terms with DRUM: Drumbeat, eardrum, drumhead, kettledrum, drumroll, drumstick.'
   }
 ];
 
@@ -1108,7 +1588,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Deep cave spelunking formations"',
     themeWord: 'CAVERNS',
-    words: ['CAVE', 'CRYSTAL', 'FALLL', 'GROTTO', 'STALACTITE', 'STALAGMITE'],
+    words: ['ABYSS', 'CHASM', 'CRYSTAL', 'GROTTO', 'STALACTITE', 'STALAGMITE'],
     difficulty: 'Challenging',
     funFact: 'A simple mnemonic: stalactites hold "tight" to the ceiling; stalagmites "might" reach the roof from the floor.'
   },
@@ -1136,7 +1616,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"In the sewing and tailor kit"',
     themeWord: 'NEEDLEWORK',
-    words: ['BUTTON', 'NEEDLE', 'PINCUSHION', 'SCISSORS', 'THIMBLE', 'THREAD'],
+    words: ['BOBBIN', 'BUTTON', 'PINCUSHION', 'SCISSORS', 'THIMBLE', 'THREAD'],
     difficulty: 'Easy',
     funFact: 'Bone sewing needles dating back more than 25,000 years have been discovered in Upper Paleolithic archaeological sites.'
   },
@@ -1493,7 +1973,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"In the autumn apple orchard"',
     themeWord: 'CIDERY',
-    words: ['BASKET', 'CIDER', 'CRISP', 'FRITTER', 'PIE', 'PRESS'],
+    words: ['APPLE', 'BASKET', 'CRISP', 'FRITTER', 'PIE', 'PRESS'],
     difficulty: 'Easy',
     funFact: 'There are over 7,500 varieties of apples grown throughout the world.'
   },
@@ -1598,7 +2078,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Sweet chilled summer desserts"',
     themeWord: 'GELATO',
-    words: ['CONE', 'FROZEN', 'GELATO', 'PARFAIT', 'SHERBET', 'SUNDAE'],
+    words: ['CONE', 'CUSTARD', 'FROZEN', 'PARFAIT', 'SHERBET', 'SUNDAE'],
     difficulty: 'Easy',
     funFact: 'Gelato contains less air and less butterfat than traditional ice cream, giving it a denser and richer flavor.'
   },
@@ -1941,7 +2421,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"In the morning espresso blend"',
     themeWord: 'ROASTERY',
-    words: ['ARABICA', 'BEAN', 'CREMA', 'GRIND', 'ROAST', 'ROBUSTA'],
+    words: ['ARABICA', 'BEAN', 'CREMA', 'FILTER', 'GRIND', 'ROBUSTA'],
     difficulty: 'Easy',
     funFact: 'Arabica coffee beans account for about 60% of world coffee production, known for their sweeter, aromatic flavor.'
   },
@@ -2011,7 +2491,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"In the delicious French boulangerie"',
     themeWord: 'CROISSANT',
-    words: ['BAGUETTE', 'BRIOCHE', 'BOULE', 'CROISSANT', 'FICELLE', 'PAIN'],
+    words: ['BAGUETTE', 'BOULE', 'BRIOCHE', 'ECLAIR', 'FICELLE', 'PAIN'],
     difficulty: 'Easy',
     funFact: 'French law formally protects the "Baguette de tradition française," mandating it be made without artificial additives.'
   },
@@ -2326,7 +2806,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the deep blue ocean reef"',
     themeWord: 'CORALREEF',
-    words: ['ANEMONE', 'CLOWNFISH', 'CORAL', 'MANTA', 'SPONGE', 'TURTLE'],
+    words: ['ANEMONE', 'CLOWNFISH', 'KELP', 'MANTA', 'SPONGE', 'TURTLE'],
     difficulty: 'Easy',
     funFact: 'Coral reefs occupy less than 0.1% of the world\'s ocean area, yet provide a home for at least 25% of all marine species.'
   },
@@ -2361,14 +2841,14 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the autumn harvest orchard"',
     themeWord: 'CIDERMILL',
-    words: ['APPLE', 'BARREL', 'CIDER', 'JUG', 'PRESS', 'SWEET'],
+    words: ['APPLE', 'BARREL', 'JUG', 'ORCHARD', 'PRESS', 'SWEET'],
     difficulty: 'Easy',
     funFact: 'Unfiltered apple cider contains raw apple pulp, giving it an opaque golden amber appearance and richer taste.'
   },
   {
     clue: '"Things in the captain\'s sea navigation"',
     themeWord: 'CHARTWORK',
-    words: ['ANCHOR', 'BUOY', 'CHART', 'COMPASS', 'KNOT', 'SEXTANT'],
+    words: ['ANCHOR', 'BEACON', 'BUOY', 'COMPASS', 'KNOT', 'SEXTANT'],
     difficulty: 'Medium',
     funFact: 'A nautical mile is based on one minute of arc along a meridian of latitude, equal to 1,852 meters.'
   },
@@ -2459,7 +2939,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the autumn harvest orchard"',
     themeWord: 'SWEETCIDER',
-    words: ['APPLE', 'BARREL', 'CIDER', 'CINNAMON', 'JUG', 'PRESS'],
+    words: ['APPLE', 'BARREL', 'CINNAMON', 'CLOVE', 'JUG', 'PRESS'],
     difficulty: 'Easy',
     funFact: 'Hot mulled cider with cloves, orange peel, and cinnamon has been enjoyed across Britain as "wassail" since medieval times.'
   },
@@ -2494,14 +2974,14 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the sweet summer orchard"',
     themeWord: 'CHERRYPICK',
-    words: ['BASKET', 'BRANCH', 'CHERRY', 'FRUIT', 'LADDER', 'RED'],
+    words: ['BASKET', 'BLOSSOM', 'BRANCH', 'FRUIT', 'LADDER', 'RED'],
     difficulty: 'Easy',
     funFact: 'Traverse City, Michigan is known as the "Cherry Capital of the World," hosting an annual National Cherry Festival since 1925.'
   },
   {
     clue: '"Things in the cozy winter fireplace"',
     themeWord: 'CHIMNEYPOT',
-    words: ['BRICK', 'CLAY', 'FLUE', 'HEARTH', 'POT', 'SMOKE'],
+    words: ['BRICK', 'CLAY', 'FLUE', 'HEARTH', 'SMOKE', 'SOOT'],
     difficulty: 'Medium',
     funFact: 'Terracotta chimney pots were introduced on roofs in Britain in the Victorian era to improve the draft pull of fires.'
   },
@@ -2543,7 +3023,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the autumn harvest orchard"',
     themeWord: 'CORNMAZE',
-    words: ['FIELD', 'HAY', 'MAZE', 'PATH', 'PUMPKIN', 'STALK'],
+    words: ['FIELD', 'HARVEST', 'HAY', 'PATH', 'PUMPKIN', 'STALK'],
     difficulty: 'Easy',
     funFact: 'The first recorded corn maze was created in 1993 at Lebanon Valley College in Annville, Pennsylvania.'
   },
@@ -2585,7 +3065,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the cozy winter fireplace"',
     themeWord: 'ANDIRONS',
-    words: ['BRASS', 'CAST', 'EMBER', 'FIRE', 'HEARTH', 'IRON'],
+    words: ['BRASS', 'CAST', 'EMBER', 'FIRE', 'GRATE', 'HEARTH'],
     difficulty: 'Medium',
     funFact: 'Andirons (firedogs) hold firewood logs above the hearth floor to improve air circulation and draft beneath the fire.'
   },
@@ -2627,7 +3107,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the autumn harvest orchard"',
     themeWord: 'CIDERPRESS',
-    words: ['APPLE', 'BARREL', 'CRANK', 'POMACE', 'PRESS', 'SWEET'],
+    words: ['APPLE', 'BARREL', 'CRANK', 'ORCHARD', 'POMACE', 'SWEET'],
     difficulty: 'Medium',
     funFact: 'The leftover crushed apple solids after pressing cider are known as "pomace," often fed to livestock on farms.'
   },
@@ -2655,7 +3135,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the evening starry sky"',
     themeWord: 'LIGHTYEAR',
-    words: ['DISTANCE', 'GALAXY', 'LIGHT', 'SPEED', 'STARS', 'VOYAGE'],
+    words: ['COSMOS', 'DISTANCE', 'GALAXY', 'SPEED', 'STARS', 'VOYAGE'],
     difficulty: 'Easy',
     funFact: 'One light-year is the distance light travels in one Julian year: roughly 5.88 trillion miles.'
   },
@@ -2669,7 +3149,7 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
   {
     clue: '"Things in the cozy winter fireplace"',
     themeWord: 'HEARTHSTONE',
-    words: ['ASH', 'BLAZE', 'BRICK', 'EMBER', 'FIRE', 'STONE'],
+    words: ['ASH', 'BLAZE', 'BRICK', 'EMBER', 'FIRE', 'MANTEL'],
     difficulty: 'Easy',
     funFact: 'The hearthstone is the heavy stone slab forming the floor of a fireplace, designed to radiate stored warmth into the room.'
   },
@@ -2835,11 +3315,11 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
     funFact: 'Blueberries are one of the only natural foods that are truly blue in color.'
   },
   {
-    clue: '"Things in the cozy winter fireplace"',
-    themeWord: 'CHIMNEYPOT',
-    words: ['BRICK', 'CLAY', 'DRAFT', 'FLUE', 'HEARTH', 'SMOKE'],
+    clue: '"Shelf above the cozy parlor hearth"',
+    themeWord: 'MANTELPIECE',
+    words: ['CANDLE', 'CARVED', 'CLOCK', 'FRAME', 'LEDGE', 'MARBLE'],
     difficulty: 'Medium',
-    funFact: 'Clay chimney pots prevent birds from nesting in the flue and reduce downdrafts caused by wind gusts over the roof.'
+    funFact: 'The mantelpiece originally served as a hood to catch smoke before evolving into the decorative focal shelf of a parlor.'
   },
   {
     clue: '"Things in the captain\'s sea vessel"',
@@ -2875,6 +3355,216 @@ export const THEMATIC_PUZZLES_BANK: PuzzleTemplate[] = [
     words: ['CRISP', 'DOUGH', 'LAYERS', 'PASTRY', 'RICOTTA', 'SHELL'],
     difficulty: 'Challenging',
     funFact: 'Sfogliatella means "small, thin leaf," describing the ridged shell resembling stacked autumn leaves invented in an Italian monastery in the 17th century.'
+  },
+  {
+    clue: '"Ancient wonders of the Nile Valley"',
+    themeWord: 'PHARAOHS',
+    words: ['ANKH', 'CHARIOT', 'OBELISK', 'PAPYRUS', 'SPHINX', 'TEMPLE'],
+    difficulty: 'Medium',
+    funFact: 'Obelisks were carved from a single piece of red granite in Aswan and floated down the Nile on massive wooden barges.'
+  },
+  {
+    clue: '"Classic symphony woodwind section"',
+    themeWord: 'WOODWINDS',
+    words: ['BASSOON', 'CLARINET', 'FLUTE', 'OBOE', 'PICCOLO', 'SAXOPHONE'],
+    difficulty: 'Easy',
+    funFact: 'Despite being made of brass, the saxophone is classified as a woodwind instrument because it uses a vibrating single reed.'
+  },
+  {
+    clue: '"Gear inside a mountain climber\'s pack"',
+    themeWord: 'ALPINIST',
+    words: ['BELAY', 'CARABINER', 'CRAMPON', 'HARNESS', 'PITON', 'ROPE'],
+    difficulty: 'Medium',
+    funFact: 'Modern ten-point and twelve-point steel crampons revolutionized ice climbing in the early 20th century.'
+  },
+  {
+    clue: '"Found in a medieval blacksmith\'s forge"',
+    themeWord: 'SMITHY',
+    words: ['ANVIL', 'BELLOWS', 'COAL', 'HAMMER', 'QUENCH', 'TONGS'],
+    difficulty: 'Easy',
+    funFact: 'Plunging red-hot steel into water or oil ("quenching") locks the carbon crystal structure into hardened martensite.'
+  },
+  {
+    clue: '"Vibrant coral atoll ecosystem"',
+    themeWord: 'SEASCAPE',
+    words: ['ANEMONE', 'BARRACUDA', 'GROUPER', 'MORAY', 'PARROTFISH', 'URCHIN'],
+    difficulty: 'Medium',
+    funFact: 'Parrotfish produce up to 85% of the white coral sand found on tropical beaches by grinding coral skeleton with their beak-like teeth.'
+  },
+  {
+    clue: '"Traditional Japanese tea ceremony"',
+    themeWord: 'CHANOYU',
+    words: ['BAMBOO', 'BOWL', 'CADDY', 'KIMONO', 'MATCHA', 'TATAMI'],
+    difficulty: 'Medium',
+    funFact: 'The bamboo tea whisk (chasen) is carved from a single piece of seasoned bamboo split into 80 to 120 delicate tines.'
+  },
+  {
+    clue: '"Inside a grand horologist\'s workshop"',
+    themeWord: 'CLOCKWORK',
+    words: ['BALANCE', 'CHIME', 'ESCAPEMENT', 'GEAR', 'MAINSPRING', 'PINION'],
+    difficulty: 'Challenging',
+    funFact: 'The mechanical escapement is what gives a mechanical watch or clock its signature rhythmic ticking sound.'
+  },
+  {
+    clue: '"Aromatic Mediterranean herb garden"',
+    themeWord: 'HERBARIUM',
+    words: ['CHERVIL', 'FENNEL', 'LAVENDER', 'MARJORAM', 'SAVORY', 'TARRAGON'],
+    difficulty: 'Medium',
+    funFact: 'Marjoram was considered a symbol of happiness by the ancient Greeks and Romans, who wove it into bridal wreaths.'
+  },
+  {
+    clue: '"Classic chess tournament strategy"',
+    themeWord: 'CHECKMATE',
+    words: ['BISHOP', 'CASTLE', 'GAMBIT', 'KNIGHT', 'PAWN', 'ROOK'],
+    difficulty: 'Easy',
+    funFact: 'The word "checkmate" derives from the Persian phrase "Shah Mat," meaning "the King is helpless."'
+  },
+  {
+    clue: '"Equipment on a vintage film set"',
+    themeWord: 'CINEMA',
+    words: ['BOOM', 'CAMERA', 'CLAPPER', 'DOLLY', 'LENS', 'SCRIPT'],
+    difficulty: 'Easy',
+    funFact: 'The hinged clapperboard was invented by Australian film pioneer Frank Thring to synchronize separate audio and film reels.'
+  },
+  {
+    clue: '"Architectural gems of a Gothic cathedral"',
+    themeWord: 'CATHEDRAL',
+    words: ['APSE', 'BUTTRESS', 'CLOISTER', 'GARGOYLE', 'NAVE', 'TRANSEPT'],
+    difficulty: 'Challenging',
+    funFact: 'Flying buttresses allowed medieval master masons to transfer roof weight outward so walls could be filled with stained glass.'
+  },
+  {
+    clue: '"Tools of a traditional bookbinder"',
+    themeWord: 'BOOKBINDER',
+    words: ['AWL', 'BUCKRAM', 'FOLIO', 'GLUE', 'PRESS', 'THREAD'],
+    difficulty: 'Medium',
+    funFact: 'Raised bands on the spine of fine leather books originally covered the heavy hemp cords onto which pages were hand-sewn.'
+  },
+  {
+    clue: '"Treasures of a pirate\'s sea chest"',
+    themeWord: 'BUCCANEER',
+    words: ['COMPASS', 'CUTLASS', 'DOUBLOON', 'LOCKET', 'MAP', 'SPYGLASS'],
+    difficulty: 'Easy',
+    funFact: 'Spanish gold doubloons were worth two escudos and could be physically cut into "pieces of eight" for smaller change.'
+  },
+  {
+    clue: '"Found in a botanical conservatory"',
+    themeWord: 'ORANGERY',
+    words: ['CITRUS', 'FOUNTAIN', 'GLASS', 'JASMINE', 'MYRTLE', 'TRELLIS'],
+    difficulty: 'Medium',
+    funFact: 'Renaissance orangeries were heated masonry pavilions built with tall south-facing windows to shelter citrus trees in winter.'
+  },
+  {
+    clue: '"Classic French bistro menu"',
+    themeWord: 'BRASSERIE',
+    words: ['BAGUETTE', 'BOUILLON', 'CONFIT', 'CROQUE', 'QUICHE', 'SOUFFLE'],
+    difficulty: 'Medium',
+    funFact: 'The word "brasserie" originally meant "brewery" in French before coming to describe lively Alsatian-style dining halls in Paris.'
+  },
+  {
+    clue: '"Highland Scottish gathering"',
+    themeWord: 'HIGHLANDS',
+    words: ['BAGPIPE', 'BONNET', 'CABER', 'CLAN', 'KILT', 'TARTAN'],
+    difficulty: 'Easy',
+    funFact: 'In the caber toss, competitors are judged on how straight the 175-pound larch pole lands (a "12 o\'clock" turn), not distance.'
+  },
+  {
+    clue: '"Instruments of celestial navigation"',
+    themeWord: 'CELESTIAL',
+    words: ['ALMANAC', 'ASTROLABE', 'CHRONO', 'COMPASS', 'OCTANT', 'SEXTANT'],
+    difficulty: 'Medium',
+    funFact: 'By measuring the angle between the horizon and the noon sun or Polaris, a sextant lets mariners determine latitude at sea.'
+  },
+  {
+    clue: '"Classic Venetian carnival mask ball"',
+    themeWord: 'MASQUERADE',
+    words: ['BROCADE', 'CLOAK', 'DOMINO', 'FEATHER', 'GONDOLA', 'VELVET'],
+    difficulty: 'Medium',
+    funFact: 'Venetian carnival masks were historically made of papier-mâché and decorated with gold leaf, feathers, and hand-painted enamel.'
+  },
+  {
+    clue: '"Artisanal cheesemaker\'s cellar"',
+    themeWord: 'CREAMERY',
+    words: ['BRINE', 'CURD', 'MOLD', 'PRESS', 'RENNET', 'WHEY'],
+    difficulty: 'Medium',
+    funFact: 'Wheels of Parmigiano-Reggiano are tapped with a small silver hammer by master graders listening for tiny internal air pockets.'
+  },
+  {
+    clue: '"Classic Victorian parlor mystery"',
+    themeWord: 'WHODUNIT',
+    words: ['ALIBI', 'BUTLER', 'CIPHER', 'MANOR', 'MOTIVE', 'SLEUTH'],
+    difficulty: 'Easy',
+    funFact: 'Edgar Allan Poe\'s 1841 story "The Murders in the Rue Morgue" is widely credited as the first modern detective story.'
+  },
+  {
+    clue: '"Inside a classical luthiers workshop"',
+    themeWord: 'LUTHIER',
+    words: ['BRIDGE', 'CHISEL', 'EBONY', 'MAPLE', 'ROSIN', 'VARNISH'],
+    difficulty: 'Medium',
+    funFact: 'Violin backs are traditionally carved from flamed maple, while the resonant top soundboard is crafted from fine-grained spruce.'
+  },
+  {
+    clue: '"Desert oasis caravan stop"',
+    themeWord: 'CARAVAN',
+    words: ['CAMEL', 'CISTERN', 'DATES', 'DUNE', 'MIRAGE', 'PALM'],
+    difficulty: 'Easy',
+    funFact: 'Date palms can thrive in extreme desert heat so long as their deep roots reach subterranean oasis water tables.'
+  },
+  {
+    clue: '"Classic apothecary spice cabinet"',
+    themeWord: 'SPICERY',
+    words: ['ANISE', 'CLOVE', 'CORIANDER', 'MACE', 'NUTMEG', 'SAFFRON'],
+    difficulty: 'Medium',
+    funFact: 'Nutmeg and mace both come from the exact same tropical tree: nutmeg is the seed kernel and mace is its lacy red covering.'
+  },
+  {
+    clue: '"Winter Nordic ski lodge"',
+    themeWord: 'NORDIC',
+    words: ['BIRCH', 'CHALET', 'FIR', 'HEARTH', 'SAUNA', 'SLEIGH'],
+    difficulty: 'Easy',
+    funFact: 'Traditional Finnish saunas heat volcanic peridotite stones on a stove so water thrown on them produces gentle steam ("löyly").'
+  },
+  {
+    clue: '"Tools of a master calligrapher"',
+    themeWord: 'SCRIPTORIUM',
+    words: ['BLOTTER', 'INKWELL', 'NIB', 'PARCHMENT', 'QUILL', 'VELLUM'],
+    difficulty: 'Challenging',
+    funFact: 'Goose and swan wing feathers made the finest medieval quills, cured in heated sand before cutting the split nib.'
+  },
+  {
+    clue: '"Classic boardwalk amusement pier"',
+    themeWord: 'BOARDWALK',
+    words: ['ARCADE', 'CAROUSEL', 'COASTER', 'MIDWAY', 'PAVILION', 'TAFFY'],
+    difficulty: 'Easy',
+    funFact: 'Saltwater taffy became famous on the Atlantic City boardwalk in the 1880s—even though the recipe contains no actual ocean water.'
+  },
+  {
+    clue: '"Inside a glassblower\'s furnace studio"',
+    themeWord: 'GLASSWORKS',
+    words: ['ANNEAL', 'BLOWPIPE', 'CRUCIBLE', 'FURNACE', 'MOLTEN', 'PONTIL'],
+    difficulty: 'Challenging',
+    funFact: 'The slight scar on the bottom of hand-blown glassware is the "pontil mark," where the solid iron holding rod was snapped off.'
+  },
+  {
+    clue: '"Autumn woodland foraging basket"',
+    themeWord: 'WOODLAND',
+    words: ['ACORN', 'BRAMBLE', 'CHESTNUT', 'FERN', 'HAZELNUT', 'TRUFFLE'],
+    difficulty: 'Easy',
+    funFact: 'Black and white truffles grow underground in symbiotic mycorrhizal partnerships with the roots of oak, hazel, and beech trees.'
+  },
+  {
+    clue: '"Classic railway sleeping car"',
+    themeWord: 'PULLMAN',
+    words: ['BERTH', 'CONDUCTOR', 'COUPE', 'DINER', 'PORTER', 'TICKET'],
+    difficulty: 'Medium',
+    funFact: 'George Pullman introduced his luxurious palace sleeping cars in the 1860s, complete with chandeliers, plush upholstery, and dining service.'
+  },
+  {
+    clue: '"Found in a traditional falconer\'s mews"',
+    themeWord: 'FALCONRY',
+    words: ['GAUNTLET', 'HOOD', 'JESSES', 'LURE', 'PERCH', 'TALON'],
+    difficulty: 'Medium',
+    funFact: 'The phrase "wrapped around your little finger" comes from falconry, where leather jesses were looped around the falconer\'s finger.'
   }
 ];
 
@@ -2936,13 +3626,13 @@ export function getPuzzleForDate(dateStr: string): Puzzle {
   };
 }
 
-// Generate the full archive from 6 months before today's London date up to today's London date
+// Generate the full archive from the start of the year (January 1) up to today's London date
 export function getArchivePuzzles(): Puzzle[] {
   const todayLondon = getLondonDateString();
-  
+  const currentYear = todayLondon.slice(0, 4);
+
   const endDate = new Date(todayLondon + 'T12:00:00Z');
-  const startDate = new Date(endDate);
-  startDate.setDate(startDate.getDate() - 184); // 6 full months
+  const startDate = new Date(`${currentYear}-01-01T12:00:00Z`);
 
   const puzzles: Puzzle[] = [];
   const curr = new Date(endDate);

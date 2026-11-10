@@ -57,6 +57,10 @@ export const CustomPuzzleModal: React.FC<CustomPuzzleModalProps> = ({
         setError('Words should be between 3 and 12 letters long.');
         return;
       }
+      if (w === normalizedThemeWord) {
+        setError('None of the 6 lower words can be the same as the top clue answer.');
+        return;
+      }
     }
 
     // Auto-sort into strictly alphabetical order as per Thematik rules!
